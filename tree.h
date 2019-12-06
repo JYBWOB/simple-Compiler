@@ -106,6 +106,8 @@ struct Node
 	ErrorKind error;
 	int lineNo;
 
+	string trueLabel;
+	string falseLabel;
 	string* label;
 	int tempNum;
 };

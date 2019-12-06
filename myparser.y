@@ -144,6 +144,8 @@ stmt :  assign_stmt LINEEND {
             if(isDebug) {
                 cout << "assign_stmt" << endl;
             }
+            temp--;
+            $$->tempNum = -1;
             $$ = $1;
         }
      |  declare_stmt LINEEND{
@@ -229,6 +231,8 @@ assign_stmt:	ID ASSIGN expr {
 				}
 				
 				temp = temp - 1;
+				$$->tempNum = temp++;
+				tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
 				//temp = temp < 0 ? 0 : temp;
 		}
 		;
@@ -294,7 +298,7 @@ if_stmt:    IF LPAREN expr RPAREN stmt ELSE stmt {
                 $$->child[2] = $7;
                 
                 $$->label = new string[3];
-				$$->label[0] = "if_startLabel" + to_string(labelNum++);
+				$$->label[0] = "trueLabel" + to_string(labelNum++);
 				$$->label[1] = "falseLabel" + to_string(labelNum++);
 				$$->label[2] = "if_endLabel" + to_string(labelNum++);
                 
@@ -868,7 +872,7 @@ expr	:	expr ADD expr	{
             if(isDebug) 
                 cout << $$->lineNo << ": /" << endl;
         }
-    |	expr MOD expr {
+ /*   |	expr MOD expr {
             $$ = newExpNode(OpK);
             $$->attr.op = new char[10];
             strcpy($$->attr.op, "%");
@@ -893,16 +897,19 @@ expr	:	expr ADD expr	{
                 cout << $$->lineNo << ": %" << endl;
     
 		}
+*/
 	|	LPAREN expr RPAREN	{
 			$$ = $2;
         }
 	|	NUMBER	{
             $$ = $1;
             $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
         }
     |	CHARACTER {
 			$$ = $1;
 			$$->tempNum = temp++;
+			tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
 		}
 	|	ID	{
             $$ = $1;
@@ -911,8 +918,11 @@ expr	:	expr ADD expr	{
 			else
 				$$->type = it->second->type;
 			$$->tempNum = temp++;
+			tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
         }
-    |   assign_stmt {$$ = $1;}
+    |   assign_stmt {
+			$$ = $1;
+		}
     |	logical_expr {$$ = $1;}
 	;
 

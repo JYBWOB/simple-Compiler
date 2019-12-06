@@ -228,8 +228,7 @@ assign_stmt:	ID ASSIGN expr {
 						cout << $1->attr.name << ':' << $1->type << endl;
 				}
 				
-				if($3->kind.expKind == OpK)
-					temp--;
+				temp = temp - 1;
 				//temp = temp < 0 ? 0 : temp;
 		}
 		;
@@ -307,8 +306,7 @@ if_stmt:    IF LPAREN expr RPAREN stmt ELSE stmt {
 					$$->error = LogNotBool;
 				}
 				
-				if($3->kind.expKind == OpK)
-					temp--;
+				temp = temp - 1;
 				//temp = temp < 0 ? 0 : temp;
 				
             }
@@ -328,8 +326,7 @@ if_stmt:    IF LPAREN expr RPAREN stmt ELSE stmt {
 					$$->error = LogNotBool;
 				}
 				
-				if($3->kind.expKind == OpK)
-					temp--;
+				temp = temp - 1;
 				//temp = temp < 0 ? 0 : temp;
             }
        ;
@@ -351,8 +348,7 @@ while_stmt: WHILE LPAREN expr RPAREN stmt {
 					$$->error = LogNotBool;
 				}
 				
-				if($3->kind.expKind == OpK)
-					temp--;
+				temp = temp - 1;
 				//temp = temp < 0 ? 0 : temp;
             }
           ;
@@ -378,12 +374,7 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
 					$$->error = LogNotBool;
 				}
 				
-				if($3->kind.expKind == OpK)
-					temp--;
-				if($5->kind.expKind == OpK)
-					temp--;
-				if($7->kind.expKind == OpK)
-					temp--;
+				temp = temp - 3;
 				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN      LINEEND expr LINEEND expr RPAREN stmt {
@@ -406,10 +397,7 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
 					$$->error = LogNotBool;
 				}
 				
-				if($4->kind.expKind == OpK)
-					temp--;
-				if($6->kind.expKind == OpK)
-					temp--;
+				temp = temp - 2;
 				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN expr LINEEND      LINEEND expr RPAREN stmt {
@@ -429,10 +417,7 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
 				   || $8->error != Normal)
 					$$->error = ChildError;
 					
-				if($3->kind.expKind == OpK)
-					temp--;
-				if($6->kind.expKind == OpK)
-					temp--;
+				temp = temp - 2;
 				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN expr LINEEND expr LINEEND      RPAREN stmt {
@@ -455,10 +440,7 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
 					$$->error = LogNotBool;
 				}
 				
-				if($3->kind.expKind == OpK)
-					temp--;
-				if($5->kind.expKind == OpK)
-					temp--;
+				temp = temp - 2;
 				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN      LINEEND      LINEEND expr RPAREN stmt {
@@ -477,8 +459,7 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
 				   || $7->error != Normal)
 					$$->error = ChildError;
 					
-				if($5->kind.expKind == OpK)
-					temp--;
+				temp = temp - 1;
 				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN      LINEEND expr LINEEND      RPAREN stmt {
@@ -500,8 +481,7 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
 					$$->error = LogNotBool;
 				}
 				
-				if($4->kind.expKind == OpK)
-					temp--;
+				temp = temp - 1;
 				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN expr LINEEND      LINEEND      RPAREN stmt {
@@ -520,8 +500,7 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
 				   || $7->error != Normal)
 					$$->error = ChildError;
 		
-				if($3->kind.expKind == OpK)
-					temp--;
+				temp = temp - 1;
 				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN      LINEEND      LINEEND      RPAREN stmt {
@@ -558,10 +537,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = getDiffError($1->type, $3->type);
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -585,10 +561,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = getDiffError($1->type, $3->type);
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
 			tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -612,10 +585,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = getDiffError($1->type, $3->type);
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -638,10 +608,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = getDiffError($1->type, $3->type);
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -663,10 +630,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = getDiffError($1->type, $3->type);
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -689,10 +653,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = getDiffError($1->type, $3->type);
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -714,10 +675,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = LogNotBool;
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -739,10 +697,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = LogNotBool;
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -764,10 +719,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = LogNotBool;
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -789,10 +741,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = LogNotBool;
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -813,8 +762,7 @@ logical_expr :     |   expr BNE expr {
 				$$->error = LogNotBool;
 			}
 			
-			if($2->kind.expKind == OpK)
-				temp--;
+			temp = temp - 1 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -841,10 +789,7 @@ expr	:	expr ADD expr	{
 				$$->type = $1->type;
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -868,10 +813,7 @@ expr	:	expr ADD expr	{
 				$$->type = $1->type;
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -895,10 +837,7 @@ expr	:	expr ADD expr	{
 				$$->type = $1->type;
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -922,10 +861,7 @@ expr	:	expr ADD expr	{
 				$$->type = $1->type;
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -949,10 +885,7 @@ expr	:	expr ADD expr	{
 				$$->type = $1->type;
 			}
 			
-			if($1->kind.expKind == OpK)
-				temp--;
-			if($3->kind.expKind == OpK)
-				temp--;
+			temp = temp - 2;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
@@ -965,11 +898,11 @@ expr	:	expr ADD expr	{
         }
 	|	NUMBER	{
             $$ = $1;
-            //$$->tempNum = temp++;
+            $$->tempNum = temp++;
         }
     |	CHARACTER {
 			$$ = $1;
-			//$$->tempNum = temp++;
+			$$->tempNum = temp++;
 		}
 	|	ID	{
             $$ = $1;
@@ -977,7 +910,7 @@ expr	:	expr ADD expr	{
 				$$->error = NotDef;
 			else
 				$$->type = it->second->type;
-			//$$->tempNum = temp++;
+			$$->tempNum = temp++;
         }
     |   assign_stmt {$$ = $1;}
     |	logical_expr {$$ = $1;}

@@ -288,10 +288,10 @@ void ShowNode(Node* root) {
 		}
 	}
 	// tempÊä³ö
-	//cout << "\t\t";
-	//if (root->tempNum != -1) {
-	//	cout << "temp:" << root->tempNum;
-	//}
+	cout << "\t\t";
+	if (root->tempNum != -1) {
+		cout << "temp:" << root->tempNum;
+	}
 	//cout << endl;
 
 	// labelÊä³ö

@@ -298,9 +298,9 @@ if_stmt:    IF LPAREN expr RPAREN stmt ELSE stmt {
                 $$->child[2] = $7;
                 
                 $$->label = new string[3];
-				$$->label[0] = "trueLabel" + to_string(labelNum++);
-				$$->label[1] = "falseLabel" + to_string(labelNum++);
-				$$->label[2] = "if_endLabel" + to_string(labelNum++);
+				$$->label[0] = "trueL" + to_string(labelNum++);
+				$$->label[1] = "falseL" + to_string(labelNum++);
+				$$->label[2] = "endL" + to_string(labelNum++);
                 
                 if($3->error != Normal 
 				   || $5->error != Normal
@@ -320,8 +320,8 @@ if_stmt:    IF LPAREN expr RPAREN stmt ELSE stmt {
                 $$->child[1] = $5;
                 
                 $$->label = new string[2];
-				$$->label[0] = "trueLabel" + to_string(labelNum++);
-				$$->label[1] = "if_endLabel" + to_string(labelNum++);
+				$$->label[0] = "trueL" + to_string(labelNum++);
+				$$->label[1] = "endL" + to_string(labelNum++);
                 
                 if($3->error != Normal 
 				   || $5->error != Normal)
@@ -341,9 +341,9 @@ while_stmt: WHILE LPAREN expr RPAREN stmt {
                 $$->child[1] = $5;
                 
                 $$->label = new string[3];
-                $$->label[0] = "while_startLabel" + to_string(labelNum++);
-				$$->label[1] = "true_label" + to_string(labelNum++);
-				$$->label[2] = "while_endLabel" + to_string(labelNum++);
+                $$->label[0] = "startL" + to_string(labelNum++);
+				$$->label[1] = "trueL" + to_string(labelNum++);
+				$$->label[2] = "endLabel" + to_string(labelNum++);
 				
                 if($3->error != Normal 
 				   || $5->error != Normal)
@@ -365,9 +365,9 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[3] = $9;
                 
                 $$->label = new string[3];
-                $$->label[0] = "for_startLabel" + to_string(labelNum++);
-				$$->label[1] = "true_label" + to_string(labelNum++);
-				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                $$->label[0] = "startLabel" + to_string(labelNum++);
+				$$->label[1] = "trueLabel" + to_string(labelNum++);
+				$$->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if($3->error != Normal 
 				   || $5->error != Normal
@@ -389,9 +389,9 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[3] = $8; 
                 
                 $$->label = new string[3];
-                $$->label[0] = "for_startLabel" + to_string(labelNum++);
-				$$->label[1] = "true_label" + to_string(labelNum++);
-				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                $$->label[0] = "startLabel" + to_string(labelNum++);
+				$$->label[1] = "trueLabel" + to_string(labelNum++);
+				$$->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if($4->error != Normal 
 				   || $6->error != Normal
@@ -412,9 +412,9 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[3] = $8; 
                 
                 $$->label = new string[3];
-                $$->label[0] = "for_startLabel" + to_string(labelNum++);
-				$$->label[1] = "true_label" + to_string(labelNum++);
-				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                $$->label[0] = "startLabel" + to_string(labelNum++);
+				$$->label[1] = "trueLabel" + to_string(labelNum++);
+				$$->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if($3->error != Normal 
 				   || $6->error != Normal
@@ -432,10 +432,10 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[3] = $8;
                 
                 $$->label = new string[3];
-                $$->label[0] = "for_startLabel" + to_string(labelNum++);
-				$$->label[1] = "true_label" + to_string(labelNum++);
-				$$->label[2] = "for_endLabel" + to_string(labelNum++);
-                
+                $$->label[0] = "startLabel" + to_string(labelNum++);
+				$$->label[1] = "trueLabel" + to_string(labelNum++);
+				$$->label[2] = "endLabel" + to_string(labelNum++);
+				
                 if($3->error != Normal 
 				   || $5->error != Normal
 				   || $8->error != Normal)
@@ -455,9 +455,9 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[3] = $7;
                 
                 $$->label = new string[3];
-                $$->label[0] = "for_startLabel" + to_string(labelNum++);
-				$$->label[1] = "true_label" + to_string(labelNum++);
-				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                $$->label[0] = "startLabel" + to_string(labelNum++);
+				$$->label[1] = "trueLabel" + to_string(labelNum++);
+				$$->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if($5->error != Normal 
 				   || $7->error != Normal)
@@ -474,9 +474,9 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[3] = $7;
                 
                 $$->label = new string[3];
-                $$->label[0] = "for_startLabel" + to_string(labelNum++);
-				$$->label[1] = "true_label" + to_string(labelNum++);
-				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                $$->label[0] = "startLabel" + to_string(labelNum++);
+				$$->label[1] = "trueLabel" + to_string(labelNum++);
+				$$->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if($4->error != Normal 
 				   || $7->error != Normal)
@@ -496,9 +496,9 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[3] = $7;
                 
                 $$->label = new string[3];
-                $$->label[0] = "for_startLabel" + to_string(labelNum++);
-				$$->label[1] = "true_label" + to_string(labelNum++);
-				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                $$->label[0] = "startLabel" + to_string(labelNum++);
+				$$->label[1] = "trueLabel" + to_string(labelNum++);
+				$$->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if($3->error != Normal 
 				   || $7->error != Normal)
@@ -515,9 +515,9 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[3] = $6;
                 
                 $$->label = new string[3];
-                $$->label[0] = "for_startLabel" + to_string(labelNum++);
-				$$->label[1] = "true_label" + to_string(labelNum++);
-				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                $$->label[0] = "startLabel" + to_string(labelNum++);
+				$$->label[1] = "trueLabel" + to_string(labelNum++);
+				$$->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if($6->error != Normal)
 					$$->error = ChildError;

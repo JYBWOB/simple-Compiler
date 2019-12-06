@@ -19,7 +19,7 @@
 * C++ source file generated from myparser.y.
 * 
 * Date: 12/06/19
-* Time: 23:28:47
+* Time: 23:51:48
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -651,9 +651,9 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = yyattribute(7 - 7);
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "trueLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "falseLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "if_endLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "trueL" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "falseL" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "endL" + to_string(labelNum++);
                 
                 if(yyattribute(3 - 7)->error != Normal 
 				   || yyattribute(5 - 7)->error != Normal
@@ -685,8 +685,8 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[1] = yyattribute(5 - 5);
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[2];
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "trueLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "if_endLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "trueL" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "endL" + to_string(labelNum++);
                 
                 if(yyattribute(3 - 5)->error != Normal 
 				   || yyattribute(5 - 5)->error != Normal)
@@ -716,9 +716,9 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[1] = yyattribute(5 - 5);
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
-                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "while_startLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "while_endLabel" + to_string(labelNum++);
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "startL" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "trueL" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "endLabel" + to_string(labelNum++);
 				
                 if(yyattribute(3 - 5)->error != Normal 
 				   || yyattribute(5 - 5)->error != Normal)
@@ -750,9 +750,9 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(9 - 9);
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
-                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "trueLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(3 - 9)->error != Normal 
 				   || yyattribute(5 - 9)->error != Normal
@@ -786,9 +786,9 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(8 - 8); 
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
-                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "trueLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(4 - 8)->error != Normal 
 				   || yyattribute(6 - 8)->error != Normal
@@ -821,9 +821,9 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(8 - 8); 
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
-                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "trueLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(3 - 8)->error != Normal 
 				   || yyattribute(6 - 8)->error != Normal
@@ -853,10 +853,10 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(8 - 8);
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
-                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
-                
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "trueLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "endLabel" + to_string(labelNum++);
+				
                 if(yyattribute(3 - 8)->error != Normal 
 				   || yyattribute(5 - 8)->error != Normal
 				   || yyattribute(8 - 8)->error != Normal)
@@ -888,9 +888,9 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(7 - 7);
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
-                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "trueLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(5 - 7)->error != Normal 
 				   || yyattribute(7 - 7)->error != Normal)
@@ -919,9 +919,9 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(7 - 7);
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
-                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "trueLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(4 - 7)->error != Normal 
 				   || yyattribute(7 - 7)->error != Normal)
@@ -953,9 +953,9 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(7 - 7);
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
-                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "trueLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(3 - 7)->error != Normal 
 				   || yyattribute(7 - 7)->error != Normal)
@@ -984,9 +984,9 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(6 - 6);
                 
                 (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
-                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
-				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "trueLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(6 - 6)->error != Normal)
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = ChildError;
@@ -2098,8 +2098,8 @@ void YYPARSERNAME::yytables()
 		{ 52, YYAT_SHIFT, 40 },
 		{ 52, YYAT_SHIFT, 78 },
 		{ 52, YYAT_SHIFT, 41 },
-		{ 24, YYAT_SHIFT, 36 },
-		{ 19, YYAT_SHIFT, 34 },
+		{ 22, YYAT_SHIFT, 35 },
+		{ 21, YYAT_SHIFT, 34 },
 		{ 18, YYAT_SHIFT, 33 },
 		{ 28, YYAT_SHIFT, 40 },
 		{ 28, YYAT_SHIFT, 52 },
@@ -2391,12 +2391,12 @@ void YYPARSERNAME::yytables()
 		{ -71, 1, YYAT_ERROR, 0 },
 		{ -98, 1, YYAT_ERROR, 0 },
 		{ -102, 1, YYAT_ERROR, 0 },
-		{ -87, 1, YYAT_DEFAULT, 129 },
+		{ 0, 0, YYAT_REDUCE, 8 },
 		{ 0, 0, YYAT_REDUCE, 3 },
+		{ -102, 1, YYAT_ERROR, 0 },
+		{ -88, 1, YYAT_DEFAULT, 129 },
 		{ 0, 0, YYAT_REDUCE, 6 },
 		{ 0, 0, YYAT_REDUCE, 7 },
-		{ 0, 0, YYAT_REDUCE, 8 },
-		{ -103, 1, YYAT_ERROR, 0 },
 		{ -121, 1, YYAT_ERROR, 0 },
 		{ 0, 0, YYAT_DEFAULT, 59 },
 		{ 137, 1, YYAT_REDUCE, 33 },
@@ -2406,9 +2406,9 @@ void YYPARSERNAME::yytables()
 		{ 115, 1, YYAT_REDUCE, 33 },
 		{ -133, 1, YYAT_ERROR, 0 },
 		{ 99, 1, YYAT_REDUCE, 33 },
+		{ 0, 0, YYAT_REDUCE, 5 },
 		{ 0, 0, YYAT_REDUCE, 1 },
 		{ 0, 0, YYAT_REDUCE, 2 },
-		{ 0, 0, YYAT_REDUCE, 5 },
 		{ 0, 0, YYAT_REDUCE, 4 },
 		{ -128, 1, YYAT_REDUCE, 21 },
 		{ 0, 0, YYAT_REDUCE, 14 },
@@ -2422,8 +2422,8 @@ void YYPARSERNAME::yytables()
 		{ 0, 0, YYAT_REDUCE, 52 },
 		{ -147, 1, YYAT_DEFAULT, 124 },
 		{ 0, 0, YYAT_REDUCE, 54 },
-		{ 0, 0, YYAT_REDUCE, 51 },
 		{ 0, 0, YYAT_REDUCE, 55 },
+		{ 0, 0, YYAT_REDUCE, 51 },
 		{ -105, 1, YYAT_REDUCE, 33 },
 		{ -146, 1, YYAT_DEFAULT, 106 },
 		{ 0, 0, YYAT_REDUCE, 9 },
@@ -2511,18 +2511,18 @@ void YYPARSERNAME::yytables()
 	static const yynontermgoto_t YYNEARFAR YYBASED_CODE nontermgoto[] = {
 		{ 129, 130 },
 		{ 129, 25 },
-		{ 129, 24 },
+		{ 129, 21 },
 		{ 129, 26 },
 		{ 116, 49 },
-		{ 129, 21 },
-		{ 129, 22 },
 		{ 129, 23 },
+		{ 129, 24 },
+		{ 129, 19 },
 		{ 13, 29 },
 		{ 13, 20 },
 		{ 123, 128 },
-		{ 116, 51 },
-		{ 116, 124 },
 		{ 116, 50 },
+		{ 116, 124 },
+		{ 116, 51 },
 		{ 122, 127 },
 		{ 120, 126 },
 		{ 117, 125 },
@@ -2558,11 +2558,11 @@ void YYPARSERNAME::yytables()
 		{ 33, 58 },
 		{ 31, 56 },
 		{ 30, 55 },
-		{ 29, 35 },
+		{ 29, 36 },
 		{ 28, 53 },
 		{ 27, 48 },
 		{ 26, 39 },
-		{ 5, 19 },
+		{ 5, 22 },
 		{ 0, 2 }
 	};
 	yynontermgoto = nontermgoto;
@@ -2587,10 +2587,10 @@ void YYPARSERNAME::yytables()
 		{ 0, -1 },
 		{ 0, -1 },
 		{ 0, -1 },
+		{ 0, -1 },
+		{ 0, -1 },
+		{ 0, -1 },
 		{ 0, 29 },
-		{ 0, -1 },
-		{ 0, -1 },
-		{ 0, -1 },
 		{ 0, -1 },
 		{ 0, -1 },
 		{ 0, -1 },

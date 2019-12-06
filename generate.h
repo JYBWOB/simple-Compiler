@@ -20,6 +20,11 @@ extern void recursive_gen_code(ofstream& fout, Node* root);
 
 extern void stmt_gen_code(ofstream& fout, Node* root);
 extern void expr_gen_code(ofstream& fout, Node* root);
+
+// expr节点是否需要递归处理
+// ID & Const 不需要递归，返回false，并将对应值存入target寄存器
+// Op 需要递归，直接返回true
+// assign类型，直接返回true
 extern bool needToRecursive(ofstream& fout, Node* root, string target);
 
 void genAsmCode(ofstream& fout, Node *root) {
@@ -97,6 +102,7 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 	}
 	case AssignK:
 	{
+		fout << "; assign stmt" << endl;
 		Node* e1 = root->child[0];
 		Node* e2 = root->child[1];
 		if (needToRecursive(fout, e2, "eax")) {
@@ -106,11 +112,13 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 		fout << "\tMOV _" << e1->attr.name << ", eax" << endl;
 		if(root->tempNum != -1)
 			fout << "\tMOV t" << root->tempNum << ", eax" << endl;
+		fout << endl;
 		break;
 	}
 	case ForK: 
 	{
-		fout << endl;
+		fout << endl; 
+		fout << "; for stmt" << endl;
 		Node* expr1 = root->child[0];
 		Node* expr2 = root->child[1];
 		Node* expr3 = root->child[2];
@@ -140,13 +148,18 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 		}
 		break;
 	case InputK:
+		fout << "; Input stmt" << endl;
+		fout << "\tinvoke crt_scanf, SADD(\"%d\", 0), addr _"
+			<< root->child[0]->attr.name << endl;
 		break;
 	case OutputK:
+		fout << "; Output stmt" << endl;
 		if (needToRecursive(fout, root->child[0], "eax")) {
 			recursive_gen_code(fout, root->child[0]);
 			fout << "\tMOV eax, t" << root->child[0]->tempNum << endl;
 		}
 		fout << "\tinvoke crt_printf, SADD(\"%d\", 13, 10), eax"  << endl;
+		fout << endl;
 		break;
 	case DeclK:
 		// do nothing
@@ -388,10 +401,10 @@ void expr_gen_code(ofstream& fout, Node* root) {
 			fout << root->label[0] << ":" << endl;
 			recursive_gen_code(fout, e2);
 			fout << root->label[1] << ":" << endl;
-			// 均为真
+			// 均为假
 			fout << "\tjmp " << root->falseLabel << endl;
 			fout << root->label[2] << ":" << endl;
-			// 一个为假
+			// 一个为真
 			fout << "\tjmp " << root->trueLabel << endl;
 		}
 		else if (string(root->attr.op) == "!") {
@@ -401,26 +414,28 @@ void expr_gen_code(ofstream& fout, Node* root) {
 			recursive_gen_code(fout, e);
 		}
 		break;
-	case ConstK:
-		switch (root->type)
-		{
-		case Integer:
-			fout << "\tMOV t" << root->tempNum << ", " << root->attr.value.intVal << endl;
-			break;
-		case Char:
-			fout << "\tMOV t" << root->tempNum << ", " << root->attr.value.chVal << endl;
-			break;
-		case Bool:
-			fout << "\tMOV t" << root->tempNum << ", " << root->attr.value.booleanVal << endl;
-			break;
-		default:
-			break;
-		}
-		break;
-	case IdK:
-		fout << "\tMOV eax" << ",  _" << root->attr.name << endl;
-		fout << "\tMOV t" << root->tempNum << ", eax" << endl;
-		break;
+	//case ConstK:
+	//	switch (root->type)
+	//	{
+	//	case Integer:
+	//		fout << "\tMOV t" << root->tempNum << ", " << root->attr.value.intVal << endl;
+	//		break;
+	//	case Char:
+	//		fout << "\tMOV t" << root->tempNum << ", " << root->attr.value.chVal << endl;
+	//		break;
+	//	case Bool:
+	//		fout << "\tMOV t" << root->tempNum << ", " << root->attr.value.booleanVal << endl;
+	//		break;
+	//	default:
+	//		break;
+	//	}
+	//	cout << "Error" << endl;
+	//	break;
+	//case IdK:
+	//	fout << "\tMOV eax" << ",  _" << root->attr.name << endl;
+	//	fout << "\tMOV t" << root->tempNum << ", eax" << endl;
+	//	cout << "Error" << endl;
+	//	break;
 	default:
 		break;
 	}
@@ -479,13 +494,11 @@ void gen_data_code(ofstream& fout, Node* declNode) {
 	string str = "";
 	switch (typeNode->type)
 	{
-	case Void:
-		break;
 	case Integer:
 		str = " DWORD 0";
 		break;
 	case Char:
-		str = " BYTTE 0";
+		str = " BYTE 0";
 		break;
 	case Bool:
 		str = " BYTE 0";

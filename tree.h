@@ -290,69 +290,68 @@ void ShowNode(Node* root) {
 		}
 	}
 	// tempÊä³ö
-	cout << "\t\t";
-	if (root->tempNum != -1) {
-		cout << "temp:" << root->tempNum;
-	}
-	//cout << endl;
+	//cout << "\t\t";
+	//if (root->tempNum != -1) {
+	//	cout << "temp:" << root->tempNum;
+	//}
 
 	// labelÊä³ö
 	//cout << "\t\t";
 	//if (root->label != nullptr) {
 	//	cout << root->label[0];
 	//}
-	//cout << endl;
 
 
 	// ´íÎó¼ì²é
-	//cout << "\t\t\t";
-	//switch (root->error)
-	//{
-	//case Normal:
-	//	cout << kindName[root->type];
-	//	break;
-	//case ChildError:
-	//	cout << "Error:Children Error";
-	//	break;
-	//case SibError:
-	//	cout << "Error:Sibling Error";
-	//	break;
-	//case NotDef:
-	//	cout << "Error:Undeclared identifier";
-	//	break;
-	//case ReDef:
-	//	cout << "Error:Variable redefinition";
-	//	break;
-	//case IntToChar:
-	//	cout << "Error:Operations on Int to Char";
-	//	break;
-	//case CharToInt:
-	//	cout << "Error:Operations on Char to Int";
-	//	break;
-	//case IntToBool:
-	//	cout << "Error:Operations on Int to Bool";
-	//	break;
-	//case BoolToInt:
-	//	cout << "Error:Operations on Bool to Int";
-	//	break;
-	//case CharToBool:
-	//	cout << "Error:Operations on Char to Bool";
-	//	break;
-	//case BoolToChar:
-	//	cout << "Error:Operations on Bool to Char";
-	//	break;
-	//case OutBool:
-	//	cout << "Error:Can't output boolean type";
-	//	break;
-	//case OutVoid:
-	//	cout << "Error:Can't output void type";
-	//	break;
-	//case LogNotBool:
-	//	cout << "Error:Logical operand is not of type bool";
-	//	break;
-	//default:
-	//	break;
-	//}
+	cout << "\t\t\t";
+
+	switch (root->error)
+	{
+	case Normal:
+		cout << kindName[root->type];
+		break;
+	case ChildError:
+		cout << "Error:Children Error";
+		break;
+	case SibError:
+		cout << "Error:Sibling Error";
+		break;
+	case NotDef:
+		cout << "Error:Undeclared identifier";
+		break;
+	case ReDef:
+		cout << "Error:Variable redefinition";
+		break;
+	case IntToChar:
+		cout << "Error:Operations on Int to Char";
+		break;
+	case CharToInt:
+		cout << "Error:Operations on Char to Int";
+		break;
+	case IntToBool:
+		cout << "Error:Operations on Int to Bool";
+		break;
+	case BoolToInt:
+		cout << "Error:Operations on Bool to Int";
+		break;
+	case CharToBool:
+		cout << "Error:Operations on Char to Bool";
+		break;
+	case BoolToChar:
+		cout << "Error:Operations on Bool to Char";
+		break;
+	case OutBool:
+		cout << "Error:Can't output boolean type";
+		break;
+	case OutVoid:
+		cout << "Error:Can't output void type";
+		break;
+	case LogNotBool:
+		cout << "Error:Logical operand is not of type bool";
+		break;
+	default:
+		break;
+	}
 
 	cout << endl;
 

@@ -121,7 +121,12 @@ program :   MAIN LPAREN RPAREN LBRACE stmts RBRACE {
                 postOrderTraverse($$);
                 printIdTable();
                 
-                genAsmCode(fout, $$);
+                if($$->error == Normal)
+					genAsmCode(fout, $$);
+				else {
+					cout << endl << "Error exists" << endl;
+					cout << "Can't generate asm code" << endl;
+				}
                 system("pause");
             }
         ;
@@ -133,6 +138,8 @@ stmts   :   stmts stmt {
                     temp = temp->sibling;
                 }
                 temp->sibling = $2;
+                if($2->error != Normal)
+					$$->error = SibError;
             }
         |   stmt {
                 $$ = $1;
@@ -169,6 +176,7 @@ stmt :  assign_stmt LINEEND {
 			$$->child[0] = $3;
 			
 			// Î´ÉùÃ÷
+			it = idTable.find($3->attr.name);
 			if(it == idTable.end()) {
 				$3->error = NotDef;
 				$$->error = ChildError;

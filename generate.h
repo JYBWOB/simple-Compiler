@@ -149,8 +149,12 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 		break;
 	case InputK:
 		fout << "; Input stmt" << endl;
-		fout << "\tinvoke crt_scanf, SADD(\"%d\", 0), addr _"
-			<< root->child[0]->attr.name << endl;
+		if(root->child[0]->type == Char)
+			fout << "\tinvoke crt_scanf, SADD(\"%c\", 0), addr _"
+				<< root->child[0]->attr.name << endl;
+		else 
+			fout << "\tinvoke crt_scanf, SADD(\"%d\", 0), addr _"
+				<< root->child[0]->attr.name << endl;
 		break;
 	case OutputK:
 		fout << "; Output stmt" << endl;
@@ -158,7 +162,10 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 			recursive_gen_code(fout, root->child[0]);
 			fout << "\tMOV eax, t" << root->child[0]->tempNum << endl;
 		}
-		fout << "\tinvoke crt_printf, SADD(\"%d\", 13, 10), eax"  << endl;
+		if(root->child[0]->type == Char)
+			fout << "\tinvoke crt_printf, SADD(\"%c\", 13, 10), eax" << endl;
+		else
+			fout << "\tinvoke crt_printf, SADD(\"%d\", 13, 10), eax"  << endl;
 		fout << endl;
 		break;
 	case DeclK:
@@ -459,7 +466,7 @@ bool needToRecursive(ofstream& fout, Node* root, string target) {
 			fout << root->attr.value.intVal << endl;
 			break;
 		case Char:
-			fout << root->attr.value.chVal << endl;
+			fout << "\'" << root->attr.value.chVal << "\'" << endl;
 			break;
 		case Bool:
 			fout << root->attr.value.booleanVal << endl;
@@ -498,10 +505,10 @@ void gen_data_code(ofstream& fout, Node* declNode) {
 		str = " DWORD 0";
 		break;
 	case Char:
-		str = " BYTE 0";
+		str = " DWORD \'0\'";
 		break;
 	case Bool:
-		str = " BYTE 0";
+		str = " DWORD 0";
 		break;
 	default:
 		break;

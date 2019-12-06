@@ -129,7 +129,7 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 		if (expr3) {
 			recursive_gen_code(fout, expr3);
 		}
-		fout << "jmp " << root->label[0] << endl;
+		fout << "\tjmp " << root->label[0] << endl;
 		fout << root->label[2] << ":" << endl;
 		fout << endl;
 	}
@@ -218,6 +218,48 @@ void expr_gen_code(ofstream& fout, Node* root) {
 				fout << "\tMOV ebx, t" << e2->tempNum << endl;
 			}
 			fout << "\tDIV ebx" << endl;
+			fout << "\tMOV t" << root->tempNum << ", eax" << endl;
+		}
+		else if (string(root->attr.op) == "%") {
+			Node* e1 = root->child[0];
+			Node* e2 = root->child[1];
+			if (needToRecursive(fout, e1, "eax")) {
+				recursive_gen_code(fout, e1);
+				fout << "\tMOV eax, t" << e1->tempNum << endl;
+			}
+			if (needToRecursive(fout, e2, "ebx")) {
+				recursive_gen_code(fout, e2);
+				fout << "\tMOV ebx, t" << e2->tempNum << endl;
+			}
+			fout << "\tDIV ebx" << endl;
+			fout << "\tMOV t" << root->tempNum << ", edx" << endl;
+		}
+		else if (string(root->attr.op) == "&") {
+			Node* e1 = root->child[0];
+			Node* e2 = root->child[1];
+			if (needToRecursive(fout, e1, "eax")) {
+				recursive_gen_code(fout, e1);
+				fout << "\tMOV eax, t" << e1->tempNum << endl;
+			}
+			if (needToRecursive(fout, e2, "ebx")) {
+				recursive_gen_code(fout, e2);
+				fout << "\tMOV ebx, t" << e2->tempNum << endl;
+			}
+			fout << "\tAND eax, ebx" << endl;
+			fout << "\tMOV t" << root->tempNum << ", eax" << endl;
+		}
+		else if (string(root->attr.op) == "|") {
+			Node* e1 = root->child[0];
+			Node* e2 = root->child[1];
+			if (needToRecursive(fout, e1, "eax")) {
+				recursive_gen_code(fout, e1);
+				fout << "\tMOV eax, t" << e1->tempNum << endl;
+			}
+			if (needToRecursive(fout, e2, "ebx")) {
+				recursive_gen_code(fout, e2);
+				fout << "\tMOV ebx, t" << e2->tempNum << endl;
+			}
+			fout << "\tOR eax, ebx" << endl;
 			fout << "\tMOV t" << root->tempNum << ", eax" << endl;
 		}
 		else if (string(root->attr.op) == ">") {
@@ -319,8 +361,44 @@ void expr_gen_code(ofstream& fout, Node* root) {
 		else if (string(root->attr.op) == "&&") {
 			Node* e1 = root->child[0];
 			Node* e2 = root->child[1];
+			e1->trueLabel = root->label[0];
+			e1->falseLabel = root->label[2];
+			e2->trueLabel = root->label[1];
+			e2->falseLabel = root->label[2];
 
-			
+			recursive_gen_code(fout, e1);
+			fout << root->label[0] << ":" << endl;
+			recursive_gen_code(fout, e2);
+			fout << root->label[1] << ":" << endl;
+			// 均为真
+			fout << "\tjmp " << root->trueLabel << endl;
+			fout << root->label[2] << ":" << endl;
+			// 一个为假
+			fout << "\tjmp " << root->falseLabel << endl;
+		}
+		else if (string(root->attr.op) == "||") {
+			Node* e1 = root->child[0];
+			Node* e2 = root->child[1];
+			e1->trueLabel = root->label[2];
+			e1->falseLabel = root->label[0];
+			e2->trueLabel = root->label[2];
+			e2->falseLabel = root->label[1];
+
+			recursive_gen_code(fout, e1);
+			fout << root->label[0] << ":" << endl;
+			recursive_gen_code(fout, e2);
+			fout << root->label[1] << ":" << endl;
+			// 均为真
+			fout << "\tjmp " << root->falseLabel << endl;
+			fout << root->label[2] << ":" << endl;
+			// 一个为假
+			fout << "\tjmp " << root->trueLabel << endl;
+		}
+		else if (string(root->attr.op) == "!") {
+			Node* e = root->child[0];
+			e->trueLabel = root->falseLabel;
+			e->falseLabel = root->trueLabel;
+			recursive_gen_code(fout, e);
 		}
 		break;
 	case ConstK:

@@ -679,6 +679,11 @@ logical_expr :     |   expr BNE expr {
 				$$->error = LogNotBool;
 			}
 			
+			$$->label = new string[3];
+            $$->label[0] = "trueL" + to_string(labelNum++);
+            $$->label[1] = "trueL" + to_string(labelNum++);
+			$$->label[2] = "falseL" + to_string(labelNum++);
+			
 			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
@@ -701,56 +706,17 @@ logical_expr :     |   expr BNE expr {
 				$$->error = LogNotBool;
 			}
 			
+			$$->label = new string[3];
+            $$->label[0] = "falseL" + to_string(labelNum++);
+            $$->label[1] = "falseL" + to_string(labelNum++);
+			$$->label[2] = "trueL" + to_string(labelNum++);
+			
 			temp = temp - 2 ;
 			//temp = temp < 0 ? 0 : temp;
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << $$->lineNo << ": ||" << endl;
-		}
-	| expr AND_BIT expr {
-            $$ = newExpNode(OpK);
-            $$->attr.op = new char[10];
-            strcpy($$->attr.op, "&");
-            $$->child[0] = $1;
-            $$->child[1] = $3;
-            
-            $$->type = Bool;
-            if($1->error != Normal || $3->error != Normal) {
-				$$->error = ChildError;
-            }
-            else if(!($1->type == Bool && $3->type == Bool)) {
-				$$->error = LogNotBool;
-			}
-			
-			temp = temp - 2 ;
-			//temp = temp < 0 ? 0 : temp;
-            $$->tempNum = temp++;
-            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
-            if(isDebug)
-                cout << $$->lineNo << ": &" << endl;
-		}
-	| expr OR_BIT expr {
-            $$ = newExpNode(OpK);
-            $$->attr.op = new char[10];
-            strcpy($$->attr.op, "|");
-            $$->child[0] = $1;
-            $$->child[1] = $3;
-            
-            $$->type = Bool;
-            if($1->error != Normal || $3->error != Normal) {
-				$$->error = ChildError;
-            }
-            else if(!($1->type == Bool && $3->type == Bool)) {
-				$$->error = LogNotBool;
-			}
-			
-			temp = temp - 2 ;
-			//temp = temp < 0 ? 0 : temp;
-            $$->tempNum = temp++;
-            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
-            if(isDebug)
-                cout << $$->lineNo << ": |" << endl;
 		}
 	| NOT expr {
             $$ = newExpNode(OpK);
@@ -765,6 +731,10 @@ logical_expr :     |   expr BNE expr {
             else if(!($2->type == Bool)) {
 				$$->error = LogNotBool;
 			}
+			
+			$$->label = new string[2];
+            $$->label[0] = "trueL" + to_string(labelNum++);
+			$$->label[1] = "falseL" + to_string(labelNum++);
 			
 			temp = temp - 1 ;
 			//temp = temp < 0 ? 0 : temp;
@@ -872,7 +842,7 @@ expr	:	expr ADD expr	{
             if(isDebug) 
                 cout << $$->lineNo << ": /" << endl;
         }
- /*   |	expr MOD expr {
+	   | expr MOD expr {
             $$ = newExpNode(OpK);
             $$->attr.op = new char[10];
             strcpy($$->attr.op, "%");
@@ -895,9 +865,51 @@ expr	:	expr ADD expr	{
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << $$->lineNo << ": %" << endl;
-    
 		}
-*/
+		| expr AND_BIT expr {
+		        $$ = newExpNode(OpK);
+				$$->attr.op = new char[10];
+				strcpy($$->attr.op, "&");
+				$$->child[0] = $1;
+				$$->child[1] = $3;
+				
+				if($1->error != Normal || $3->error != Normal) {
+					$$->error = ChildError;
+				}
+				else if($1->type != $3->type) {
+					$$->error = getDiffError($1->type, $3->type);
+				}
+				else {
+					$$->type = $1->type;
+				}
+				
+				temp = temp - 2 ;
+				//temp = temp < 0 ? 0 : temp;
+				$$->tempNum = temp++;
+				tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
+			}
+		| expr OR_BIT expr {
+            $$ = newExpNode(OpK);
+				$$->attr.op = new char[10];
+				strcpy($$->attr.op, "|");
+				$$->child[0] = $1;
+				$$->child[1] = $3;
+				
+				if($1->error != Normal || $3->error != Normal) {
+					$$->error = ChildError;
+				}
+				else if($1->type != $3->type) {
+					$$->error = getDiffError($1->type, $3->type);
+				}
+				else {
+					$$->type = $1->type;
+				}
+				
+				temp = temp - 2 ;
+				//temp = temp < 0 ? 0 : temp;
+				$$->tempNum = temp++;
+				tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
+		}
 	|	LPAREN expr RPAREN	{
 			$$ = $2;
         }

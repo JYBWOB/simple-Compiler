@@ -189,6 +189,7 @@ CHARACTER '.'
 {SUB} {return SUB;}
 {MUL} {return MUL;}
 {DIV} {return DIV;}
+{MOD} {return MOD;}
 {ID} {
     Node* temp = newExpNode(IdK);
     temp->attr.name = new char[10];

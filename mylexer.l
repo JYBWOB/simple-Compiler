@@ -55,7 +55,7 @@ struct Node
 	int lineNo;
 	
 	string* label;
-	int *tempNum;
+	int tempNum;
 };
 extern Node* newStmtNode(StmtKind sk); 
 extern Node* newExpNode(ExpKind ek);

@@ -8,6 +8,7 @@ Date: 2019年11月10日
 
 #include "mylexer.h"
 #include "tree.h"
+#include "generate.h"
 #include <iostream>
 #include <unordered_map>
 #include <vector>
@@ -15,7 +16,11 @@ Date: 2019年11月10日
 #include <string>
 using namespace std;
 int LINENO = 0;
+
 int temp = 0;
+int labelNum = 0;
+int tempMaxNum = 0;
+ofstream fout("result.asm");
 
 extern string kindName[];
 
@@ -115,6 +120,8 @@ program :   MAIN LPAREN RPAREN LBRACE stmts RBRACE {
                 
                 postOrderTraverse($$);
                 printIdTable();
+                
+                genAsmCode(fout, $$);
                 system("pause");
             }
         ;
@@ -179,6 +186,10 @@ stmt :  assign_stmt LINEEND {
 			if($3->error != Normal) {
 				$$->error = ChildError;
 			}
+			
+			if($3->kind.expKind == OpK)
+					temp--;
+			//temp = temp < 0 ? 0 : temp;
 		} 
      |  LINEEND {
 			$$ = newStmtNode(EmptyK);
@@ -216,6 +227,10 @@ assign_stmt:	ID ASSIGN expr {
 					if(isDebug)
 						cout << $1->attr.name << ':' << $1->type << endl;
 				}
+				
+				if($3->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
 		}
 		;
 
@@ -279,6 +294,10 @@ if_stmt:    IF LPAREN expr RPAREN stmt ELSE stmt {
                 $$->child[1] = $5;
                 $$->child[2] = $7;
                 
+                $$->label = new string[3];
+				$$->label[0] = "if_startLabel" + to_string(labelNum++);
+				$$->label[1] = "falseLabel" + to_string(labelNum++);
+				$$->label[2] = "if_endLabel" + to_string(labelNum++);
                 
                 if($3->error != Normal 
 				   || $5->error != Normal
@@ -287,11 +306,20 @@ if_stmt:    IF LPAREN expr RPAREN stmt ELSE stmt {
 				else if($3->type != Bool) {
 					$$->error = LogNotBool;
 				}
+				
+				if($3->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
+				
             }
        |    IF LPAREN expr RPAREN stmt {
                 $$ = newStmtNode(IfK);
                 $$->child[0] = $3;
                 $$->child[1] = $5;
+                
+                $$->label = new string[2];
+				$$->label[0] = "trueLabel" + to_string(labelNum++);
+				$$->label[1] = "if_endLabel" + to_string(labelNum++);
                 
                 if($3->error != Normal 
 				   || $5->error != Normal)
@@ -299,6 +327,10 @@ if_stmt:    IF LPAREN expr RPAREN stmt ELSE stmt {
 				else if($3->type != Bool) {
 					$$->error = LogNotBool;
 				}
+				
+				if($3->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             }
        ;
 
@@ -307,12 +339,21 @@ while_stmt: WHILE LPAREN expr RPAREN stmt {
                 $$->child[0] = $3;
                 $$->child[1] = $5;
                 
+                $$->label = new string[3];
+                $$->label[0] = "while_startLabel" + to_string(labelNum++);
+				$$->label[1] = "true_label" + to_string(labelNum++);
+				$$->label[2] = "while_endLabel" + to_string(labelNum++);
+				
                 if($3->error != Normal 
 				   || $5->error != Normal)
 					$$->error = ChildError;
 				else if($3->type != Bool) {
 					$$->error = LogNotBool;
 				}
+				
+				if($3->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             }
           ;
 
@@ -320,8 +361,13 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$ = newStmtNode(ForK);   
                 $$->child[0] = $3;
                 $$->child[1] = $5;
-                $$->child[2] = $7;
+                $$->child[2] = $7; 
                 $$->child[3] = $9;
+                
+                $$->label = new string[3];
+                $$->label[0] = "for_startLabel" + to_string(labelNum++);
+				$$->label[1] = "true_label" + to_string(labelNum++);
+				$$->label[2] = "for_endLabel" + to_string(labelNum++);
                 
                 if($3->error != Normal 
 				   || $5->error != Normal
@@ -331,6 +377,14 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
 				else if($5->type != Bool) {
 					$$->error = LogNotBool;
 				}
+				
+				if($3->kind.expKind == OpK)
+					temp--;
+				if($5->kind.expKind == OpK)
+					temp--;
+				if($7->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN      LINEEND expr LINEEND expr RPAREN stmt {
                 $$ = newStmtNode(ForK);   
@@ -339,6 +393,11 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[2] = $6;
                 $$->child[3] = $8; 
                 
+                $$->label = new string[3];
+                $$->label[0] = "for_startLabel" + to_string(labelNum++);
+				$$->label[1] = "true_label" + to_string(labelNum++);
+				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if($4->error != Normal 
 				   || $6->error != Normal
 				   || $8->error != Normal)
@@ -346,6 +405,12 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
 				else if($4->type != Bool) {
 					$$->error = LogNotBool;
 				}
+				
+				if($4->kind.expKind == OpK)
+					temp--;
+				if($6->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN expr LINEEND      LINEEND expr RPAREN stmt {
                 $$ = newStmtNode(ForK);   
@@ -354,10 +419,21 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[2] = $6;
                 $$->child[3] = $8; 
                 
+                $$->label = new string[3];
+                $$->label[0] = "for_startLabel" + to_string(labelNum++);
+				$$->label[1] = "true_label" + to_string(labelNum++);
+				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if($3->error != Normal 
 				   || $6->error != Normal
 				   || $8->error != Normal)
 					$$->error = ChildError;
+					
+				if($3->kind.expKind == OpK)
+					temp--;
+				if($6->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN expr LINEEND expr LINEEND      RPAREN stmt {
                 $$ = newStmtNode(ForK);   
@@ -366,6 +442,11 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[2] = nullptr;
                 $$->child[3] = $8;
                 
+                $$->label = new string[3];
+                $$->label[0] = "for_startLabel" + to_string(labelNum++);
+				$$->label[1] = "true_label" + to_string(labelNum++);
+				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if($3->error != Normal 
 				   || $5->error != Normal
 				   || $8->error != Normal)
@@ -373,6 +454,12 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
 				else if($5->type != Bool) {
 					$$->error = LogNotBool;
 				}
+				
+				if($3->kind.expKind == OpK)
+					temp--;
+				if($5->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN      LINEEND      LINEEND expr RPAREN stmt {
                 $$ = newStmtNode(ForK);   
@@ -381,9 +468,18 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[2] = $5;
                 $$->child[3] = $7;
                 
+                $$->label = new string[3];
+                $$->label[0] = "for_startLabel" + to_string(labelNum++);
+				$$->label[1] = "true_label" + to_string(labelNum++);
+				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if($5->error != Normal 
 				   || $7->error != Normal)
 					$$->error = ChildError;
+					
+				if($5->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN      LINEEND expr LINEEND      RPAREN stmt {
                 $$ = newStmtNode(ForK);   
@@ -392,12 +488,21 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[2] = nullptr;
                 $$->child[3] = $7;
                 
+                $$->label = new string[3];
+                $$->label[0] = "for_startLabel" + to_string(labelNum++);
+				$$->label[1] = "true_label" + to_string(labelNum++);
+				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if($4->error != Normal 
 				   || $7->error != Normal)
 					$$->error = ChildError;
 				else if($4->type != Bool) {
 					$$->error = LogNotBool;
 				}
+				
+				if($4->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN expr LINEEND      LINEEND      RPAREN stmt {
                 $$ = newStmtNode(ForK);   
@@ -406,9 +511,18 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[2] = nullptr;
                 $$->child[3] = $7;
                 
+                $$->label = new string[3];
+                $$->label[0] = "for_startLabel" + to_string(labelNum++);
+				$$->label[1] = "true_label" + to_string(labelNum++);
+				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if($3->error != Normal 
 				   || $7->error != Normal)
 					$$->error = ChildError;
+		
+				if($3->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             }
         | FOR LPAREN      LINEEND      LINEEND      RPAREN stmt {
                 $$ = newStmtNode(ForK);   
@@ -417,8 +531,14 @@ for_stmt: FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt {
                 $$->child[2] = nullptr;
                 $$->child[3] = $6;
                 
+                $$->label = new string[3];
+                $$->label[0] = "for_startLabel" + to_string(labelNum++);
+				$$->label[1] = "true_label" + to_string(labelNum++);
+				$$->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if($6->error != Normal)
 					$$->error = ChildError;
+					
             }
         ;
         
@@ -437,6 +557,14 @@ logical_expr :     |   expr BNE expr {
             else if($1->type != $3->type) {
 				$$->error = getDiffError($1->type, $3->type);
 			}
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
 			
             if(isDebug) 
                 cout << $$->lineNo <<": >" << endl;
@@ -457,6 +585,14 @@ logical_expr :     |   expr BNE expr {
 				$$->error = getDiffError($1->type, $3->type);
 			}
 			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+			tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
+			
             if(isDebug) 
                 cout << $$->lineNo << ": >=" << endl;
         }
@@ -475,7 +611,14 @@ logical_expr :     |   expr BNE expr {
             else if($1->type != $3->type) {
 				$$->error = getDiffError($1->type, $3->type);
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << $$->lineNo << ": <" << endl;
         }
@@ -494,7 +637,14 @@ logical_expr :     |   expr BNE expr {
             else if($1->type != $3->type) {
 				$$->error = getDiffError($1->type, $3->type);
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << $$->lineNo << ": <=" << endl;
         }
@@ -512,7 +662,14 @@ logical_expr :     |   expr BNE expr {
             else if($1->type != $3->type) {
 				$$->error = getDiffError($1->type, $3->type);
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << $$->lineNo << ": ==" << endl;
         }
@@ -531,7 +688,14 @@ logical_expr :     |   expr BNE expr {
             else if($1->type != $3->type) {
 				$$->error = getDiffError($1->type, $3->type);
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << $$->lineNo << ": !=" << endl;
 		}
@@ -549,7 +713,14 @@ logical_expr :     |   expr BNE expr {
             else if(!($1->type == Bool && $3->type == Bool)) {
 				$$->error = LogNotBool;
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << $$->lineNo << ": &&" << endl;
 		}
@@ -567,7 +738,14 @@ logical_expr :     |   expr BNE expr {
             else if(!($1->type == Bool && $3->type == Bool)) {
 				$$->error = LogNotBool;
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << $$->lineNo << ": ||" << endl;
 		}
@@ -585,7 +763,14 @@ logical_expr :     |   expr BNE expr {
             else if(!($1->type == Bool && $3->type == Bool)) {
 				$$->error = LogNotBool;
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << $$->lineNo << ": &" << endl;
 		}
@@ -603,7 +788,14 @@ logical_expr :     |   expr BNE expr {
             else if(!($1->type == Bool && $3->type == Bool)) {
 				$$->error = LogNotBool;
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << $$->lineNo << ": |" << endl;
 		}
@@ -620,6 +812,12 @@ logical_expr :     |   expr BNE expr {
             else if(!($2->type == Bool)) {
 				$$->error = LogNotBool;
 			}
+			
+			if($2->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             
             if(isDebug)
                 cout << $$->lineNo << ": !" << endl;
@@ -642,7 +840,14 @@ expr	:	expr ADD expr	{
 			else {
 				$$->type = $1->type;
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << $$->lineNo << ": +" << endl;
         }
@@ -662,7 +867,14 @@ expr	:	expr ADD expr	{
 			else {
 				$$->type = $1->type;
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << $$->lineNo << ": -" << endl;
         }
@@ -682,7 +894,14 @@ expr	:	expr ADD expr	{
 			else {
 				$$->type = $1->type;
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << $$->lineNo << ": *" << endl;
         }
@@ -702,7 +921,14 @@ expr	:	expr ADD expr	{
 			else {
 				$$->type = $1->type;
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << $$->lineNo << ": /" << endl;
         }
@@ -722,7 +948,14 @@ expr	:	expr ADD expr	{
 			else {
 				$$->type = $1->type;
 			}
-            
+			
+			if($1->kind.expKind == OpK)
+				temp--;
+			if($3->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            $$->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << $$->lineNo << ": %" << endl;
     
@@ -732,14 +965,19 @@ expr	:	expr ADD expr	{
         }
 	|	NUMBER	{
             $$ = $1;
+            //$$->tempNum = temp++;
         }
-    |	CHARACTER {$$ = $1;}
+    |	CHARACTER {
+			$$ = $1;
+			//$$->tempNum = temp++;
+		}
 	|	ID	{
             $$ = $1;
             if((it = idTable.find($1->attr.name)) == idTable.end())
 				$$->error = NotDef;
 			else
 				$$->type = it->second->type;
+			//$$->tempNum = temp++;
         }
     |   assign_stmt {$$ = $1;}
     |	logical_expr {$$ = $1;}

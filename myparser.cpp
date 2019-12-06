@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 56 of your 30 day trial period.
+* You are on day 58 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * myparser.cpp
 * C++ source file generated from myparser.y.
 * 
-* Date: 12/04/19
-* Time: 21:17:46
+* Date: 12/06/19
+* Time: 17:18:16
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -45,6 +45,7 @@ Date: 2019年11月10日
 
 #include "mylexer.h"
 #include "tree.h"
+#include "generate.h"
 #include <iostream>
 #include <unordered_map>
 #include <vector>
@@ -52,6 +53,11 @@ Date: 2019年11月10日
 #include <string>
 using namespace std;
 int LINENO = 0;
+
+int temp = 0;
+int labelNum = 0;
+int tempMaxNum = 0;
+ofstream fout("result.asm");
 
 extern string kindName[];
 
@@ -73,7 +79,7 @@ void printIdTable() {
 	}
 }
 
-#line 77 "myparser.cpp"
+#line 83 "myparser.cpp"
 // repeated because of possible precompiled header
 #include <yycpars.h>
 
@@ -93,11 +99,11 @@ using namespace yl;
 YYPARSERNAME::YYPARSERNAME()
 {
 	yytables();
-#line 54 ".\\myparser.y"
+#line 60 ".\\myparser.y"
 
 	// place any extra initialisation code here
 
-#line 101 "myparser.cpp"
+#line 107 "myparser.cpp"
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -107,11 +113,11 @@ YYPARSERNAME::~YYPARSERNAME()
 {
 	// allows virtual functions to be called properly for correct cleanup
 	yydestroy();
-#line 59 ".\\myparser.y"
+#line 65 ".\\myparser.y"
 
 	// place any extra cleanup code here
 
-#line 115 "myparser.cpp"
+#line 121 "myparser.cpp"
 }
 
 #ifndef YYSTYPE
@@ -219,7 +225,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 7);
 #endif
 			{
-#line 107 ".\\myparser.y"
+#line 113 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(CompK);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(5 - 6);
@@ -230,9 +236,11 @@ void YYPARSERNAME::yyaction(int action)
                 
                 postOrderTraverse((*(YYSTYPE YYFAR*)yyvalptr));
                 printIdTable();
+                
+                genAsmCode(fout, (*(YYSTYPE YYFAR*)yyvalptr));
                 system("pause");
             
-#line 236 "myparser.cpp"
+#line 244 "myparser.cpp"
 			}
 		}
 		break;
@@ -243,7 +251,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 3);
 #endif
 			{
-#line 121 ".\\myparser.y"
+#line 129 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 2);
                 Node* temp = yyattribute(1 - 2);
@@ -252,7 +260,7 @@ void YYPARSERNAME::yyaction(int action)
                 }
                 temp->sibling = yyattribute(2 - 2);
             
-#line 256 "myparser.cpp"
+#line 264 "myparser.cpp"
 			}
 		}
 		break;
@@ -263,11 +271,11 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 129 ".\\myparser.y"
+#line 137 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
             
-#line 271 "myparser.cpp"
+#line 279 "myparser.cpp"
 			}
 		}
 		break;
@@ -278,14 +286,14 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 3);
 #endif
 			{
-#line 135 ".\\myparser.y"
+#line 143 ".\\myparser.y"
 
             if(isDebug) {
                 cout << "assign_stmt" << endl;
             }
             (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 2);
         
-#line 289 "myparser.cpp"
+#line 297 "myparser.cpp"
 			}
 		}
 		break;
@@ -296,14 +304,14 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 3);
 #endif
 			{
-#line 141 ".\\myparser.y"
+#line 149 ".\\myparser.y"
 
             if(isDebug) {
                 cout << "declare_stmt" << endl;
             }
             (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 2);
         
-#line 307 "myparser.cpp"
+#line 315 "myparser.cpp"
 			}
 		}
 		break;
@@ -314,9 +322,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 147 ".\\myparser.y"
+#line 155 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 320 "myparser.cpp"
+#line 328 "myparser.cpp"
 			}
 		}
 		break;
@@ -327,9 +335,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 148 ".\\myparser.y"
+#line 156 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 333 "myparser.cpp"
+#line 341 "myparser.cpp"
 			}
 		}
 		break;
@@ -340,9 +348,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 149 ".\\myparser.y"
+#line 157 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 346 "myparser.cpp"
+#line 354 "myparser.cpp"
 			}
 		}
 		break;
@@ -353,7 +361,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 150 ".\\myparser.y"
+#line 158 ".\\myparser.y"
 
 			(*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(CompK);
 			(*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(2 - 3);
@@ -361,7 +369,7 @@ void YYPARSERNAME::yyaction(int action)
 			if(yyattribute(2 - 3)->error != Normal)
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = ChildError;
 		
-#line 365 "myparser.cpp"
+#line 373 "myparser.cpp"
 			}
 		}
 		break;
@@ -372,7 +380,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 6);
 #endif
 			{
-#line 157 ".\\myparser.y"
+#line 165 ".\\myparser.y"
 
 			(*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(InputK);
 			(*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(3 - 5);
@@ -385,7 +393,7 @@ void YYPARSERNAME::yyaction(int action)
 			else
 				yyattribute(3 - 5)->type = it->second->type;
 		
-#line 389 "myparser.cpp"
+#line 397 "myparser.cpp"
 			}
 		}
 		break;
@@ -396,7 +404,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 6);
 #endif
 			{
-#line 169 ".\\myparser.y"
+#line 177 ".\\myparser.y"
 
 			(*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(OutputK);
 			(*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(3 - 5);
@@ -409,8 +417,12 @@ void YYPARSERNAME::yyaction(int action)
 			if(yyattribute(3 - 5)->error != Normal) {
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = ChildError;
 			}
+			
+			if(yyattribute(3 - 5)->kind.expKind == OpK)
+					temp--;
+			//temp = temp < 0 ? 0 : temp;
 		
-#line 414 "myparser.cpp"
+#line 426 "myparser.cpp"
 			}
 		}
 		break;
@@ -421,11 +433,11 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 182 ".\\myparser.y"
+#line 194 ".\\myparser.y"
 
 			(*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(EmptyK);
 		
-#line 429 "myparser.cpp"
+#line 441 "myparser.cpp"
 			}
 		}
 		break;
@@ -436,7 +448,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 187 ".\\myparser.y"
+#line 199 ".\\myparser.y"
 
                 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(AssignK);
@@ -468,8 +480,12 @@ void YYPARSERNAME::yyaction(int action)
 					if(isDebug)
 						cout << yyattribute(1 - 3)->attr.name << ':' << yyattribute(1 - 3)->type << endl;
 				}
+				
+				if(yyattribute(3 - 3)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
 		
-#line 473 "myparser.cpp"
+#line 489 "myparser.cpp"
 			}
 		}
 		break;
@@ -480,7 +496,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 3);
 #endif
 			{
-#line 221 ".\\myparser.y"
+#line 237 ".\\myparser.y"
 
                     (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(DeclK);
                     (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(1 - 2);
@@ -509,7 +525,7 @@ void YYPARSERNAME::yyaction(int action)
 						idNode = idNode->sibling;
                     } 
                 
-#line 513 "myparser.cpp"
+#line 529 "myparser.cpp"
 			}
 		}
 		break;
@@ -520,11 +536,11 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 251 ".\\myparser.y"
+#line 267 ".\\myparser.y"
 
                     (*(YYSTYPE YYFAR*)yyvalptr) = newTypeNode(Void);
                 
-#line 528 "myparser.cpp"
+#line 544 "myparser.cpp"
 			}
 		}
 		break;
@@ -535,11 +551,11 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 254 ".\\myparser.y"
+#line 270 ".\\myparser.y"
 
                     (*(YYSTYPE YYFAR*)yyvalptr) = newTypeNode(Integer);
                 
-#line 543 "myparser.cpp"
+#line 559 "myparser.cpp"
 			}
 		}
 		break;
@@ -550,11 +566,11 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 257 ".\\myparser.y"
+#line 273 ".\\myparser.y"
 
                     (*(YYSTYPE YYFAR*)yyvalptr) = newTypeNode(Float);
                 
-#line 558 "myparser.cpp"
+#line 574 "myparser.cpp"
 			}
 		}
 		break;
@@ -565,11 +581,11 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 260 ".\\myparser.y"
+#line 276 ".\\myparser.y"
 
                     (*(YYSTYPE YYFAR*)yyvalptr) = newTypeNode(Double);
                 
-#line 573 "myparser.cpp"
+#line 589 "myparser.cpp"
 			}
 		}
 		break;
@@ -580,11 +596,11 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 263 ".\\myparser.y"
+#line 279 ".\\myparser.y"
 
                     (*(YYSTYPE YYFAR*)yyvalptr) = newTypeNode(Char);
                 
-#line 588 "myparser.cpp"
+#line 604 "myparser.cpp"
 			}
 		}
 		break;
@@ -595,12 +611,12 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 268 ".\\myparser.y"
+#line 284 ".\\myparser.y"
 
                 yyattribute(1 - 3)->sibling = yyattribute(3 - 3);
                 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 3);
             
-#line 604 "myparser.cpp"
+#line 620 "myparser.cpp"
 			}
 		}
 		break;
@@ -611,9 +627,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 272 ".\\myparser.y"
+#line 288 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 617 "myparser.cpp"
+#line 633 "myparser.cpp"
 			}
 		}
 		break;
@@ -624,12 +640,17 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 8);
 #endif
 			{
-#line 275 ".\\myparser.y"
+#line 291 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(IfK);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(3 - 7);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[1] = yyattribute(5 - 7);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = yyattribute(7 - 7);
+                
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "if_startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "falseLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "if_endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(3 - 7)->error != Normal 
 				   || yyattribute(5 - 7)->error != Normal
@@ -638,8 +659,13 @@ void YYPARSERNAME::yyaction(int action)
 				else if(yyattribute(3 - 7)->type != Bool) {
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 				}
+				
+				if(yyattribute(3 - 7)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
+				
             
-#line 643 "myparser.cpp"
+#line 669 "myparser.cpp"
 			}
 		}
 		break;
@@ -650,11 +676,15 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 6);
 #endif
 			{
-#line 289 ".\\myparser.y"
+#line 315 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(IfK);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(3 - 5);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[1] = yyattribute(5 - 5);
+                
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[2];
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "trueLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "if_endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(3 - 5)->error != Normal 
 				   || yyattribute(5 - 5)->error != Normal)
@@ -662,8 +692,12 @@ void YYPARSERNAME::yyaction(int action)
 				else if(yyattribute(3 - 5)->type != Bool) {
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 				}
+				
+				if(yyattribute(3 - 5)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             
-#line 667 "myparser.cpp"
+#line 701 "myparser.cpp"
 			}
 		}
 		break;
@@ -674,20 +708,29 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 6);
 #endif
 			{
-#line 303 ".\\myparser.y"
+#line 337 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(WhileK);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(3 - 5);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[1] = yyattribute(5 - 5);
                 
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "while_startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "while_endLabel" + to_string(labelNum++);
+				
                 if(yyattribute(3 - 5)->error != Normal 
 				   || yyattribute(5 - 5)->error != Normal)
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = ChildError;
 				else if(yyattribute(3 - 5)->type != Bool) {
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 				}
+				
+				if(yyattribute(3 - 5)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             
-#line 691 "myparser.cpp"
+#line 734 "myparser.cpp"
 			}
 		}
 		break;
@@ -698,13 +741,18 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 10);
 #endif
 			{
-#line 317 ".\\myparser.y"
+#line 360 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(ForK);   
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(3 - 9);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[1] = yyattribute(5 - 9);
-                (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = yyattribute(7 - 9);
+                (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = yyattribute(7 - 9); 
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(9 - 9);
+                
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(3 - 9)->error != Normal 
 				   || yyattribute(5 - 9)->error != Normal
@@ -714,8 +762,16 @@ void YYPARSERNAME::yyaction(int action)
 				else if(yyattribute(5 - 9)->type != Bool) {
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 				}
+				
+				if(yyattribute(3 - 9)->kind.expKind == OpK)
+					temp--;
+				if(yyattribute(5 - 9)->kind.expKind == OpK)
+					temp--;
+				if(yyattribute(7 - 9)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             
-#line 719 "myparser.cpp"
+#line 775 "myparser.cpp"
 			}
 		}
 		break;
@@ -726,13 +782,18 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 9);
 #endif
 			{
-#line 333 ".\\myparser.y"
+#line 389 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(ForK);   
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = nullptr;
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[1] = yyattribute(4 - 8);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = yyattribute(6 - 8);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(8 - 8); 
+                
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(4 - 8)->error != Normal 
 				   || yyattribute(6 - 8)->error != Normal
@@ -741,8 +802,14 @@ void YYPARSERNAME::yyaction(int action)
 				else if(yyattribute(4 - 8)->type != Bool) {
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 				}
+				
+				if(yyattribute(4 - 8)->kind.expKind == OpK)
+					temp--;
+				if(yyattribute(6 - 8)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             
-#line 746 "myparser.cpp"
+#line 813 "myparser.cpp"
 			}
 		}
 		break;
@@ -753,7 +820,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 9);
 #endif
 			{
-#line 348 ".\\myparser.y"
+#line 415 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(ForK);   
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(3 - 8);
@@ -761,12 +828,23 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = yyattribute(6 - 8);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(8 - 8); 
                 
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if(yyattribute(3 - 8)->error != Normal 
 				   || yyattribute(6 - 8)->error != Normal
 				   || yyattribute(8 - 8)->error != Normal)
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = ChildError;
+					
+				if(yyattribute(3 - 8)->kind.expKind == OpK)
+					temp--;
+				if(yyattribute(6 - 8)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             
-#line 770 "myparser.cpp"
+#line 848 "myparser.cpp"
 			}
 		}
 		break;
@@ -777,13 +855,18 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 9);
 #endif
 			{
-#line 360 ".\\myparser.y"
+#line 438 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(ForK);   
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(3 - 8);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[1] = yyattribute(5 - 8);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = nullptr;
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(8 - 8);
+                
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
                 
                 if(yyattribute(3 - 8)->error != Normal 
 				   || yyattribute(5 - 8)->error != Normal
@@ -792,8 +875,14 @@ void YYPARSERNAME::yyaction(int action)
 				else if(yyattribute(5 - 8)->type != Bool) {
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 				}
+				
+				if(yyattribute(3 - 8)->kind.expKind == OpK)
+					temp--;
+				if(yyattribute(5 - 8)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             
-#line 797 "myparser.cpp"
+#line 886 "myparser.cpp"
 			}
 		}
 		break;
@@ -804,7 +893,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 8);
 #endif
 			{
-#line 375 ".\\myparser.y"
+#line 464 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(ForK);   
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = nullptr;
@@ -812,11 +901,20 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = yyattribute(5 - 7);
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(7 - 7);
                 
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if(yyattribute(5 - 7)->error != Normal 
 				   || yyattribute(7 - 7)->error != Normal)
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = ChildError;
+					
+				if(yyattribute(5 - 7)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             
-#line 820 "myparser.cpp"
+#line 918 "myparser.cpp"
 			}
 		}
 		break;
@@ -827,7 +925,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 8);
 #endif
 			{
-#line 386 ".\\myparser.y"
+#line 484 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(ForK);   
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = nullptr;
@@ -835,14 +933,23 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = nullptr;
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(7 - 7);
                 
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if(yyattribute(4 - 7)->error != Normal 
 				   || yyattribute(7 - 7)->error != Normal)
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = ChildError;
 				else if(yyattribute(4 - 7)->type != Bool) {
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 				}
+				
+				if(yyattribute(4 - 7)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             
-#line 846 "myparser.cpp"
+#line 953 "myparser.cpp"
 			}
 		}
 		break;
@@ -853,7 +960,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 8);
 #endif
 			{
-#line 400 ".\\myparser.y"
+#line 507 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(ForK);   
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = yyattribute(3 - 7);
@@ -861,11 +968,20 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = nullptr;
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(7 - 7);
                 
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if(yyattribute(3 - 7)->error != Normal 
 				   || yyattribute(7 - 7)->error != Normal)
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = ChildError;
+		
+				if(yyattribute(3 - 7)->kind.expKind == OpK)
+					temp--;
+				//temp = temp < 0 ? 0 : temp;
             
-#line 869 "myparser.cpp"
+#line 985 "myparser.cpp"
 			}
 		}
 		break;
@@ -876,7 +992,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 7);
 #endif
 			{
-#line 411 ".\\myparser.y"
+#line 527 ".\\myparser.y"
 
                 (*(YYSTYPE YYFAR*)yyvalptr) = newStmtNode(ForK);   
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[0] = nullptr;
@@ -884,10 +1000,16 @@ void YYPARSERNAME::yyaction(int action)
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[2] = nullptr;
                 (*(YYSTYPE YYFAR*)yyvalptr)->child[3] = yyattribute(6 - 6);
                 
+                (*(YYSTYPE YYFAR*)yyvalptr)->label = new string[3];
+                (*(YYSTYPE YYFAR*)yyvalptr)->label[0] = "for_startLabel" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[1] = "true_label" + to_string(labelNum++);
+				(*(YYSTYPE YYFAR*)yyvalptr)->label[2] = "for_endLabel" + to_string(labelNum++);
+                
                 if(yyattribute(6 - 6)->error != Normal)
 					(*(YYSTYPE YYFAR*)yyvalptr)->error = ChildError;
+					
             
-#line 891 "myparser.cpp"
+#line 1013 "myparser.cpp"
 			}
 		}
 		break;
@@ -898,7 +1020,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 423 ".\\myparser.y"
+#line 545 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -915,10 +1037,18 @@ void YYPARSERNAME::yyaction(int action)
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = getDiffError(yyattribute(1 - 3)->type, yyattribute(3 - 3)->type);
 			}
 			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
+			
             if(isDebug) 
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo <<": >" << endl;
         
-#line 922 "myparser.cpp"
+#line 1052 "myparser.cpp"
 			}
 		}
 		break;
@@ -929,7 +1059,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 442 ".\\myparser.y"
+#line 572 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -946,10 +1076,18 @@ void YYPARSERNAME::yyaction(int action)
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = getDiffError(yyattribute(1 - 3)->type, yyattribute(3 - 3)->type);
 			}
 			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+			tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
+			
             if(isDebug) 
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": >=" << endl;
         
-#line 953 "myparser.cpp"
+#line 1091 "myparser.cpp"
 			}
 		}
 		break;
@@ -960,7 +1098,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 461 ".\\myparser.y"
+#line 599 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -976,11 +1114,18 @@ void YYPARSERNAME::yyaction(int action)
             else if(yyattribute(1 - 3)->type != yyattribute(3 - 3)->type) {
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = getDiffError(yyattribute(1 - 3)->type, yyattribute(3 - 3)->type);
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": <" << endl;
         
-#line 984 "myparser.cpp"
+#line 1129 "myparser.cpp"
 			}
 		}
 		break;
@@ -991,7 +1136,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 480 ".\\myparser.y"
+#line 625 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1007,11 +1152,18 @@ void YYPARSERNAME::yyaction(int action)
             else if(yyattribute(1 - 3)->type != yyattribute(3 - 3)->type) {
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = getDiffError(yyattribute(1 - 3)->type, yyattribute(3 - 3)->type);
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": <=" << endl;
         
-#line 1015 "myparser.cpp"
+#line 1167 "myparser.cpp"
 			}
 		}
 		break;
@@ -1022,7 +1174,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 499 ".\\myparser.y"
+#line 651 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1037,11 +1189,18 @@ void YYPARSERNAME::yyaction(int action)
             else if(yyattribute(1 - 3)->type != yyattribute(3 - 3)->type) {
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = getDiffError(yyattribute(1 - 3)->type, yyattribute(3 - 3)->type);
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": ==" << endl;
         
-#line 1045 "myparser.cpp"
+#line 1204 "myparser.cpp"
 			}
 		}
 		break;
@@ -1052,7 +1211,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 517 ".\\myparser.y"
+#line 676 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1068,11 +1227,18 @@ void YYPARSERNAME::yyaction(int action)
             else if(yyattribute(1 - 3)->type != yyattribute(3 - 3)->type) {
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = getDiffError(yyattribute(1 - 3)->type, yyattribute(3 - 3)->type);
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": !=" << endl;
 		
-#line 1076 "myparser.cpp"
+#line 1242 "myparser.cpp"
 			}
 		}
 		break;
@@ -1083,7 +1249,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 536 ".\\myparser.y"
+#line 702 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1098,11 +1264,18 @@ void YYPARSERNAME::yyaction(int action)
             else if(!(yyattribute(1 - 3)->type == Bool && yyattribute(3 - 3)->type == Bool)) {
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": &&" << endl;
 		
-#line 1106 "myparser.cpp"
+#line 1279 "myparser.cpp"
 			}
 		}
 		break;
@@ -1113,7 +1286,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 554 ".\\myparser.y"
+#line 727 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1128,11 +1301,18 @@ void YYPARSERNAME::yyaction(int action)
             else if(!(yyattribute(1 - 3)->type == Bool && yyattribute(3 - 3)->type == Bool)) {
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": ||" << endl;
 		
-#line 1136 "myparser.cpp"
+#line 1316 "myparser.cpp"
 			}
 		}
 		break;
@@ -1143,7 +1323,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 572 ".\\myparser.y"
+#line 752 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1158,11 +1338,18 @@ void YYPARSERNAME::yyaction(int action)
             else if(!(yyattribute(1 - 3)->type == Bool && yyattribute(3 - 3)->type == Bool)) {
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": &" << endl;
 		
-#line 1166 "myparser.cpp"
+#line 1353 "myparser.cpp"
 			}
 		}
 		break;
@@ -1173,7 +1360,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 590 ".\\myparser.y"
+#line 777 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1188,11 +1375,18 @@ void YYPARSERNAME::yyaction(int action)
             else if(!(yyattribute(1 - 3)->type == Bool && yyattribute(3 - 3)->type == Bool)) {
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug)
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": |" << endl;
 		
-#line 1196 "myparser.cpp"
+#line 1390 "myparser.cpp"
 			}
 		}
 		break;
@@ -1203,7 +1397,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 3);
 #endif
 			{
-#line 608 ".\\myparser.y"
+#line 802 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1217,11 +1411,17 @@ void YYPARSERNAME::yyaction(int action)
             else if(!(yyattribute(2 - 2)->type == Bool)) {
 				(*(YYSTYPE YYFAR*)yyvalptr)->error = LogNotBool;
 			}
+			
+			if(yyattribute(2 - 2)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             
             if(isDebug)
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": !" << endl;
 		
-#line 1225 "myparser.cpp"
+#line 1425 "myparser.cpp"
 			}
 		}
 		break;
@@ -1232,7 +1432,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 627 ".\\myparser.y"
+#line 827 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1249,11 +1449,18 @@ void YYPARSERNAME::yyaction(int action)
 			else {
 				(*(YYSTYPE YYFAR*)yyvalptr)->type = yyattribute(1 - 3)->type;
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": +" << endl;
         
-#line 1257 "myparser.cpp"
+#line 1464 "myparser.cpp"
 			}
 		}
 		break;
@@ -1264,7 +1471,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 647 ".\\myparser.y"
+#line 854 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1281,11 +1488,18 @@ void YYPARSERNAME::yyaction(int action)
 			else {
 				(*(YYSTYPE YYFAR*)yyvalptr)->type = yyattribute(1 - 3)->type;
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": -" << endl;
         
-#line 1289 "myparser.cpp"
+#line 1503 "myparser.cpp"
 			}
 		}
 		break;
@@ -1296,7 +1510,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 667 ".\\myparser.y"
+#line 881 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1313,11 +1527,18 @@ void YYPARSERNAME::yyaction(int action)
 			else {
 				(*(YYSTYPE YYFAR*)yyvalptr)->type = yyattribute(1 - 3)->type;
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": *" << endl;
         
-#line 1321 "myparser.cpp"
+#line 1542 "myparser.cpp"
 			}
 		}
 		break;
@@ -1328,7 +1549,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 687 ".\\myparser.y"
+#line 908 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1345,11 +1566,18 @@ void YYPARSERNAME::yyaction(int action)
 			else {
 				(*(YYSTYPE YYFAR*)yyvalptr)->type = yyattribute(1 - 3)->type;
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": /" << endl;
         
-#line 1353 "myparser.cpp"
+#line 1581 "myparser.cpp"
 			}
 		}
 		break;
@@ -1360,7 +1588,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 707 ".\\myparser.y"
+#line 935 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = newExpNode(OpK);
             (*(YYSTYPE YYFAR*)yyvalptr)->attr.op = new char[10];
@@ -1377,12 +1605,19 @@ void YYPARSERNAME::yyaction(int action)
 			else {
 				(*(YYSTYPE YYFAR*)yyvalptr)->type = yyattribute(1 - 3)->type;
 			}
-            
+			
+			if(yyattribute(1 - 3)->kind.expKind == OpK)
+				temp--;
+			if(yyattribute(3 - 3)->kind.expKind == OpK)
+				temp--;
+			//temp = temp < 0 ? 0 : temp;
+            (*(YYSTYPE YYFAR*)yyvalptr)->tempNum = temp++;
+            tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
             if(isDebug) 
                 cout << (*(YYSTYPE YYFAR*)yyvalptr)->lineNo << ": %" << endl;
     
 		
-#line 1386 "myparser.cpp"
+#line 1621 "myparser.cpp"
 			}
 		}
 		break;
@@ -1393,11 +1628,11 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 4);
 #endif
 			{
-#line 728 ".\\myparser.y"
+#line 963 ".\\myparser.y"
 
 			(*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(2 - 3);
         
-#line 1401 "myparser.cpp"
+#line 1636 "myparser.cpp"
 			}
 		}
 		break;
@@ -1408,11 +1643,11 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 731 ".\\myparser.y"
+#line 966 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
         
-#line 1416 "myparser.cpp"
+#line 1651 "myparser.cpp"
 			}
 		}
 		break;
@@ -1423,9 +1658,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 734 ".\\myparser.y"
+#line 969 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 1429 "myparser.cpp"
+#line 1664 "myparser.cpp"
 			}
 		}
 		break;
@@ -1436,7 +1671,7 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 735 ".\\myparser.y"
+#line 970 ".\\myparser.y"
 
             (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
             if((it = idTable.find(yyattribute(1 - 1)->attr.name)) == idTable.end())
@@ -1444,7 +1679,7 @@ void YYPARSERNAME::yyaction(int action)
 			else
 				(*(YYSTYPE YYFAR*)yyvalptr)->type = it->second->type;
         
-#line 1448 "myparser.cpp"
+#line 1683 "myparser.cpp"
 			}
 		}
 		break;
@@ -1455,9 +1690,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 742 ".\\myparser.y"
+#line 977 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 1461 "myparser.cpp"
+#line 1696 "myparser.cpp"
 			}
 		}
 		break;
@@ -1468,9 +1703,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 743 ".\\myparser.y"
+#line 978 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 1474 "myparser.cpp"
+#line 1709 "myparser.cpp"
 			}
 		}
 		break;
@@ -1481,9 +1716,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 746 ".\\myparser.y"
+#line 981 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 1487 "myparser.cpp"
+#line 1722 "myparser.cpp"
 			}
 		}
 		break;
@@ -1494,9 +1729,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 747 ".\\myparser.y"
+#line 982 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 1500 "myparser.cpp"
+#line 1735 "myparser.cpp"
 			}
 		}
 		break;
@@ -1507,9 +1742,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 748 ".\\myparser.y"
+#line 983 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 1513 "myparser.cpp"
+#line 1748 "myparser.cpp"
 			}
 		}
 		break;
@@ -1520,9 +1755,9 @@ void YYPARSERNAME::yyaction(int action)
 			yyinitdebug((void YYFAR**)yya, 2);
 #endif
 			{
-#line 749 ".\\myparser.y"
+#line 984 ".\\myparser.y"
 (*(YYSTYPE YYFAR*)yyvalptr) = yyattribute(1 - 1);
-#line 1526 "myparser.cpp"
+#line 1761 "myparser.cpp"
 			}
 		}
 		break;
@@ -1885,7 +2120,7 @@ void YYPARSERNAME::yytables()
 		{ 32, YYAT_SHIFT, 57 },
 		{ 29, YYAT_SHIFT, 54 },
 		{ 78, YYAT_SHIFT, 40 },
-		{ 23, YYAT_SHIFT, 37 },
+		{ 21, YYAT_SHIFT, 37 },
 		{ 78, YYAT_SHIFT, 41 },
 		{ 78, YYAT_SHIFT, 102 },
 		{ 80, YYAT_SHIFT, 42 },
@@ -2198,12 +2433,12 @@ void YYPARSERNAME::yytables()
 		{ -102, 1, YYAT_ERROR, 0 },
 		{ -87, 1, YYAT_DEFAULT, 129 },
 		{ -103, 1, YYAT_ERROR, 0 },
-		{ 0, 0, YYAT_REDUCE, 7 },
-		{ 0, 0, YYAT_REDUCE, 8 },
 		{ -121, 1, YYAT_ERROR, 0 },
-		{ 0, 0, YYAT_REDUCE, 6 },
-		{ 0, 0, YYAT_DEFAULT, 59 },
+		{ 0, 0, YYAT_REDUCE, 7 },
 		{ 0, 0, YYAT_REDUCE, 3 },
+		{ 0, 0, YYAT_REDUCE, 6 },
+		{ 0, 0, YYAT_REDUCE, 8 },
+		{ 0, 0, YYAT_DEFAULT, 59 },
 		{ 137, 1, YYAT_REDUCE, 33 },
 		{ -99, 1, YYAT_REDUCE, 33 },
 		{ -108, 1, YYAT_DEFAULT, 129 },
@@ -2213,8 +2448,8 @@ void YYPARSERNAME::yytables()
 		{ 99, 1, YYAT_REDUCE, 33 },
 		{ 0, 0, YYAT_REDUCE, 1 },
 		{ 0, 0, YYAT_REDUCE, 2 },
-		{ 0, 0, YYAT_REDUCE, 5 },
 		{ 0, 0, YYAT_REDUCE, 4 },
+		{ 0, 0, YYAT_REDUCE, 5 },
 		{ -128, 1, YYAT_REDUCE, 21 },
 		{ 0, 0, YYAT_REDUCE, 14 },
 		{ 93, 1, YYAT_REDUCE, 33 },
@@ -2227,8 +2462,8 @@ void YYPARSERNAME::yytables()
 		{ 0, 0, YYAT_REDUCE, 52 },
 		{ 0, 0, YYAT_REDUCE, 54 },
 		{ -147, 1, YYAT_DEFAULT, 124 },
-		{ 0, 0, YYAT_REDUCE, 55 },
 		{ 0, 0, YYAT_REDUCE, 51 },
+		{ 0, 0, YYAT_REDUCE, 55 },
 		{ -105, 1, YYAT_REDUCE, 33 },
 		{ -146, 1, YYAT_DEFAULT, 106 },
 		{ 0, 0, YYAT_REDUCE, 9 },
@@ -2315,19 +2550,19 @@ void YYPARSERNAME::yytables()
 
 	static const yynontermgoto_t YYNEARFAR YYBASED_CODE nontermgoto[] = {
 		{ 129, 130 },
-		{ 129, 23 },
 		{ 129, 20 },
-		{ 129, 25 },
+		{ 129, 21 },
+		{ 129, 26 },
 		{ 116, 48 },
 		{ 129, 24 },
-		{ 129, 21 },
 		{ 129, 22 },
+		{ 129, 25 },
 		{ 13, 29 },
-		{ 13, 26 },
+		{ 13, 23 },
 		{ 123, 128 },
-		{ 116, 50 },
-		{ 116, 124 },
 		{ 116, 51 },
+		{ 116, 124 },
+		{ 116, 50 },
 		{ 122, 127 },
 		{ 120, 126 },
 		{ 117, 125 },
@@ -2366,7 +2601,7 @@ void YYPARSERNAME::yytables()
 		{ 29, 35 },
 		{ 28, 53 },
 		{ 27, 49 },
-		{ 25, 39 },
+		{ 26, 39 },
 		{ 5, 19 },
 		{ 0, 2 }
 	};
@@ -2398,8 +2633,8 @@ void YYPARSERNAME::yytables()
 		{ 0, -1 },
 		{ 0, -1 },
 		{ 0, -1 },
-		{ 45, -1 },
 		{ 0, -1 },
+		{ 45, -1 },
 		{ 39, 116 },
 		{ 38, 116 },
 		{ 46, 129 },
@@ -2515,7 +2750,7 @@ void YYPARSERNAME::yytables()
 	yytokendestbaseptr = NULL;
 	yytokendestbase_size = 0;
 }
-#line 756 ".\\myparser.y"
+#line 991 ".\\myparser.y"
 
 
 /////////////////////////////////////////////////////////////////////////////

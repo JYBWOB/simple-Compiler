@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 56 of your 30 day trial period.
+* You are on day 57 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * mylexer.cpp
 * C++ source file generated from mylexer.l.
 * 
-* Date: 12/04/19
-* Time: 21:17:46
+* Date: 12/06/19
+* Time: 15:51:06
 * 
 * ALex Version: 2.07
 ****************************************************************************/
@@ -90,13 +90,16 @@ struct Node
 	} attr;
     TypeKind type;
 	int lineNo;
+	
+	string* label;
+	int *tempNum;
 };
 extern Node* newStmtNode(StmtKind sk); 
 extern Node* newExpNode(ExpKind ek);
 extern Node* newTypeNode(TypeKind type);
 extern int LINENO;
 
-#line 100 "mylexer.cpp"
+#line 103 "mylexer.cpp"
 // repeated because of possible precompiled header
 #include <yyclex.h>
 
@@ -116,11 +119,11 @@ using namespace yl;
 YYLEXERNAME::YYLEXERNAME()
 {
 	yytables();
-#line 75 ".\\mylexer.l"
+#line 78 ".\\mylexer.l"
 
 	// place any extra initialisation code here
 
-#line 124 "mylexer.cpp"
+#line 127 "mylexer.cpp"
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -128,11 +131,11 @@ YYLEXERNAME::YYLEXERNAME()
 
 YYLEXERNAME::~YYLEXERNAME()
 {
-#line 80 ".\\mylexer.l"
+#line 83 ".\\mylexer.l"
 
 	// place any extra cleanup code here
 
-#line 136 "mylexer.cpp"
+#line 139 "mylexer.cpp"
 }
 
 #ifndef YYTEXT_SIZE
@@ -198,290 +201,290 @@ void YYLEXERNAME::yyunput(int ch)
 
 int YYLEXERNAME::yyaction(int action)
 {
-#line 142 ".\\mylexer.l"
+#line 145 ".\\mylexer.l"
 
 	// extract yylval for use later on in actions
 	YYSTYPE YYFAR& yylval = *(YYSTYPE YYFAR*)yyparserptr->yylvalptr;
 
-#line 207 "mylexer.cpp"
+#line 210 "mylexer.cpp"
 	yyreturnflg = yytrue;
 	switch (action) {
 	case 1:
 		{
-#line 148 ".\\mylexer.l"
+#line 151 ".\\mylexer.l"
 ; /* do nothing */
-#line 214 "mylexer.cpp"
+#line 217 "mylexer.cpp"
 		}
 		break;
 	case 2:
 		{
-#line 150 ".\\mylexer.l"
+#line 153 ".\\mylexer.l"
 return INPUT;
-#line 221 "mylexer.cpp"
+#line 224 "mylexer.cpp"
 		}
 		break;
 	case 3:
 		{
-#line 151 ".\\mylexer.l"
+#line 154 ".\\mylexer.l"
 return OUTPUT;
-#line 228 "mylexer.cpp"
+#line 231 "mylexer.cpp"
 		}
 		break;
 	case 4:
 		{
-#line 153 ".\\mylexer.l"
+#line 156 ".\\mylexer.l"
 return RETURN;
-#line 235 "mylexer.cpp"
+#line 238 "mylexer.cpp"
 		}
 		break;
 	case 5:
 		{
-#line 154 ".\\mylexer.l"
+#line 157 ".\\mylexer.l"
 return INT;
-#line 242 "mylexer.cpp"
+#line 245 "mylexer.cpp"
 		}
 		break;
 	case 6:
 		{
-#line 155 ".\\mylexer.l"
+#line 158 ".\\mylexer.l"
 return FLOAT;
-#line 249 "mylexer.cpp"
+#line 252 "mylexer.cpp"
 		}
 		break;
 	case 7:
 		{
-#line 156 ".\\mylexer.l"
+#line 159 ".\\mylexer.l"
 return DOUBLE;
-#line 256 "mylexer.cpp"
+#line 259 "mylexer.cpp"
 		}
 		break;
 	case 8:
 		{
-#line 157 ".\\mylexer.l"
+#line 160 ".\\mylexer.l"
 return CHAR;
-#line 263 "mylexer.cpp"
+#line 266 "mylexer.cpp"
 		}
 		break;
 	case 9:
 		{
-#line 158 ".\\mylexer.l"
+#line 161 ".\\mylexer.l"
 return VOID;
-#line 270 "mylexer.cpp"
+#line 273 "mylexer.cpp"
 		}
 		break;
 	case 10:
 		{
-#line 159 ".\\mylexer.l"
+#line 162 ".\\mylexer.l"
 return MAIN;
-#line 277 "mylexer.cpp"
+#line 280 "mylexer.cpp"
 		}
 		break;
 	case 11:
 		{
-#line 160 ".\\mylexer.l"
+#line 163 ".\\mylexer.l"
 return BREAK;
-#line 284 "mylexer.cpp"
+#line 287 "mylexer.cpp"
 		}
 		break;
 	case 12:
 		{
-#line 161 ".\\mylexer.l"
+#line 164 ".\\mylexer.l"
 return INCLUDE;
-#line 291 "mylexer.cpp"
+#line 294 "mylexer.cpp"
 		}
 		break;
 	case 13:
 		{
-#line 162 ".\\mylexer.l"
+#line 165 ".\\mylexer.l"
 return WHILE;
-#line 298 "mylexer.cpp"
+#line 301 "mylexer.cpp"
 		}
 		break;
 	case 14:
 		{
-#line 163 ".\\mylexer.l"
+#line 166 ".\\mylexer.l"
 return FOR;
-#line 305 "mylexer.cpp"
+#line 308 "mylexer.cpp"
 		}
 		break;
 	case 15:
 		{
-#line 164 ".\\mylexer.l"
+#line 167 ".\\mylexer.l"
 return SWITCH;
-#line 312 "mylexer.cpp"
+#line 315 "mylexer.cpp"
 		}
 		break;
 	case 16:
 		{
-#line 165 ".\\mylexer.l"
+#line 168 ".\\mylexer.l"
 return LBRACE;
-#line 319 "mylexer.cpp"
+#line 322 "mylexer.cpp"
 		}
 		break;
 	case 17:
 		{
-#line 166 ".\\mylexer.l"
+#line 169 ".\\mylexer.l"
 return RBRACE;
-#line 326 "mylexer.cpp"
+#line 329 "mylexer.cpp"
 		}
 		break;
 	case 18:
 		{
-#line 167 ".\\mylexer.l"
+#line 170 ".\\mylexer.l"
 return IF;
-#line 333 "mylexer.cpp"
+#line 336 "mylexer.cpp"
 		}
 		break;
 	case 19:
 		{
-#line 168 ".\\mylexer.l"
+#line 171 ".\\mylexer.l"
 return ELSE;
-#line 340 "mylexer.cpp"
+#line 343 "mylexer.cpp"
 		}
 		break;
 	case 20:
 		{
-#line 169 ".\\mylexer.l"
+#line 172 ".\\mylexer.l"
 return BE;
-#line 347 "mylexer.cpp"
+#line 350 "mylexer.cpp"
 		}
 		break;
 	case 21:
 		{
-#line 170 ".\\mylexer.l"
+#line 173 ".\\mylexer.l"
 return BNE;
-#line 354 "mylexer.cpp"
+#line 357 "mylexer.cpp"
 		}
 		break;
 	case 22:
 		{
-#line 171 ".\\mylexer.l"
+#line 174 ".\\mylexer.l"
 return LE;
-#line 361 "mylexer.cpp"
+#line 364 "mylexer.cpp"
 		}
 		break;
 	case 23:
 		{
-#line 172 ".\\mylexer.l"
+#line 175 ".\\mylexer.l"
 return LNE;
-#line 368 "mylexer.cpp"
+#line 371 "mylexer.cpp"
 		}
 		break;
 	case 24:
 		{
-#line 173 ".\\mylexer.l"
+#line 176 ".\\mylexer.l"
 return EQUAL;
-#line 375 "mylexer.cpp"
+#line 378 "mylexer.cpp"
 		}
 		break;
 	case 25:
 		{
-#line 174 ".\\mylexer.l"
+#line 177 ".\\mylexer.l"
 return ASSIGN;
-#line 382 "mylexer.cpp"
+#line 385 "mylexer.cpp"
 		}
 		break;
 	case 26:
 		{
-#line 175 ".\\mylexer.l"
+#line 178 ".\\mylexer.l"
 return AND_BIT;
-#line 389 "mylexer.cpp"
+#line 392 "mylexer.cpp"
 		}
 		break;
 	case 27:
 		{
-#line 176 ".\\mylexer.l"
+#line 179 ".\\mylexer.l"
 return AND;
-#line 396 "mylexer.cpp"
+#line 399 "mylexer.cpp"
 		}
 		break;
 	case 28:
 		{
-#line 177 ".\\mylexer.l"
+#line 180 ".\\mylexer.l"
 return OR_BIT;
-#line 403 "mylexer.cpp"
+#line 406 "mylexer.cpp"
 		}
 		break;
 	case 29:
 		{
-#line 178 ".\\mylexer.l"
+#line 181 ".\\mylexer.l"
 return OR;
-#line 410 "mylexer.cpp"
+#line 413 "mylexer.cpp"
 		}
 		break;
 	case 30:
 		{
-#line 179 ".\\mylexer.l"
+#line 182 ".\\mylexer.l"
 return NOT;
-#line 417 "mylexer.cpp"
+#line 420 "mylexer.cpp"
 		}
 		break;
 	case 31:
 		{
-#line 180 ".\\mylexer.l"
+#line 183 ".\\mylexer.l"
 return NOT_EQ;
-#line 424 "mylexer.cpp"
+#line 427 "mylexer.cpp"
 		}
 		break;
 	case 32:
 		{
-#line 181 ".\\mylexer.l"
+#line 184 ".\\mylexer.l"
 return LINEEND;
-#line 431 "mylexer.cpp"
+#line 434 "mylexer.cpp"
 		}
 		break;
 	case 33:
 		{
-#line 182 ".\\mylexer.l"
+#line 185 ".\\mylexer.l"
 return LPAREN;
-#line 438 "mylexer.cpp"
+#line 441 "mylexer.cpp"
 		}
 		break;
 	case 34:
 		{
-#line 183 ".\\mylexer.l"
+#line 186 ".\\mylexer.l"
 return RPAREN;
-#line 445 "mylexer.cpp"
+#line 448 "mylexer.cpp"
 		}
 		break;
 	case 35:
 		{
-#line 184 ".\\mylexer.l"
+#line 187 ".\\mylexer.l"
 return COMMA;
-#line 452 "mylexer.cpp"
+#line 455 "mylexer.cpp"
 		}
 		break;
 	case 36:
 		{
-#line 185 ".\\mylexer.l"
+#line 188 ".\\mylexer.l"
 return ADD;
-#line 459 "mylexer.cpp"
+#line 462 "mylexer.cpp"
 		}
 		break;
 	case 37:
 		{
-#line 186 ".\\mylexer.l"
+#line 189 ".\\mylexer.l"
 return SUB;
-#line 466 "mylexer.cpp"
+#line 469 "mylexer.cpp"
 		}
 		break;
 	case 38:
 		{
-#line 187 ".\\mylexer.l"
+#line 190 ".\\mylexer.l"
 return MUL;
-#line 473 "mylexer.cpp"
+#line 476 "mylexer.cpp"
 		}
 		break;
 	case 39:
 		{
-#line 188 ".\\mylexer.l"
+#line 191 ".\\mylexer.l"
 return DIV;
-#line 480 "mylexer.cpp"
+#line 483 "mylexer.cpp"
 		}
 		break;
 	case 40:
 		{
-#line 189 ".\\mylexer.l"
+#line 192 ".\\mylexer.l"
 
     Node* temp = newExpNode(IdK);
     temp->attr.name = new char[10];
@@ -489,12 +492,12 @@ return DIV;
     yylval = temp;
     return ID;
 
-#line 493 "mylexer.cpp"
+#line 496 "mylexer.cpp"
 		}
 		break;
 	case 41:
 		{
-#line 196 ".\\mylexer.l"
+#line 199 ".\\mylexer.l"
 
             Node* temp = newExpNode(ConstK);
             temp->attr.value.floatVal = atof(yytext);
@@ -502,12 +505,12 @@ return DIV;
             yylval = temp;
             return FLOAT_NUMBER;
         
-#line 506 "mylexer.cpp"
+#line 509 "mylexer.cpp"
 		}
 		break;
 	case 42:
 		{
-#line 203 ".\\mylexer.l"
+#line 206 ".\\mylexer.l"
 
             Node* temp = newExpNode(ConstK);
             temp->attr.value.intVal = atoi(yytext);
@@ -515,12 +518,12 @@ return DIV;
             yylval = temp;
             return INT_NUMBER;
         
-#line 519 "mylexer.cpp"
+#line 522 "mylexer.cpp"
 		}
 		break;
 	case 43:
 		{
-#line 210 ".\\mylexer.l"
+#line 213 ".\\mylexer.l"
 
 		int length = strlen(yytext);
 		int value = 0;
@@ -535,12 +538,12 @@ return DIV;
         yylval = temp;
         return OCT_NUMBER;
 	
-#line 539 "mylexer.cpp"
+#line 542 "mylexer.cpp"
 		}
 		break;
 	case 44:
 		{
-#line 224 ".\\mylexer.l"
+#line 227 ".\\mylexer.l"
 
 		int length = strlen(yytext);
 		int value = 0;
@@ -561,12 +564,12 @@ return DIV;
         yylval = temp;
         return HEX_NUMBER;
 	
-#line 565 "mylexer.cpp"
+#line 568 "mylexer.cpp"
 		}
 		break;
 	case 45:
 		{
-#line 244 ".\\mylexer.l"
+#line 247 ".\\mylexer.l"
 
 		Node* temp = newExpNode(ConstK);
 		temp->attr.value.chVal = yytext[1];
@@ -574,24 +577,24 @@ return DIV;
 		yylval = temp;
 		return CHARACTER;
 	
-#line 578 "mylexer.cpp"
+#line 581 "mylexer.cpp"
 		}
 		break;
-#line 251 ".\\mylexer.l"
+#line 254 ".\\mylexer.l"
 	
-#line 583 "mylexer.cpp"
+#line 586 "mylexer.cpp"
 	case 46:
 		{
-#line 252 ".\\mylexer.l"
+#line 255 ".\\mylexer.l"
 ;
-#line 588 "mylexer.cpp"
+#line 591 "mylexer.cpp"
 		}
 		break;
 	case 47:
 		{
-#line 253 ".\\mylexer.l"
+#line 256 ".\\mylexer.l"
 ;
-#line 595 "mylexer.cpp"
+#line 598 "mylexer.cpp"
 		}
 		break;
 	default:
@@ -1043,7 +1046,7 @@ void YYLEXERNAME::yytables()
 	};
 	yybackup = backup;
 }
-#line 255 ".\\mylexer.l"
+#line 258 ".\\mylexer.l"
 
 
 /////////////////////////////////////////////////////////////////////////////

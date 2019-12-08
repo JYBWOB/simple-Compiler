@@ -79,7 +79,7 @@ void printIdTable() {
 %token INT DOUBLE FLOAT CHAR VOID
 %token WHILE SWITCH FOR SWITCH LBRACE RBRACE IF ELSE
 %token ASSIGN AND_BIT AND OR_BIT OR BNE LNE BE LE EQUAL NOT_EQ NOT
-%token LINEEND LPAREN RPAREN LBRACE RBRACE COMMA
+%token LINEEND LPAREN RPAREN LBRACE RBRACE COMMA LFPA RFPA
 %token ADD SUB MUL DIV MOD
 %token ID
 %token INT_NUMBER
@@ -184,6 +184,19 @@ stmt :  assign_stmt LINEEND {
 			else
 				$3->type = it->second->type;
 		}
+	 |	INPUT LPAREN ArrID RPAREN LINEEND{
+		$$ = newStmtNode(InputK);
+		$$->child[0] = $3;
+		
+		// 未声明
+		it = idTable.find($3->child[0]->attr.name);
+		if(it == idTable.end()) {
+			$3->error = NotDef;
+			$$->error = ChildError;
+		}
+		else
+			$3->type = it->second->type;
+	}
 	 |	OUTPUT LPAREN expr RPAREN LINEEND{
 			$$ = newStmtNode(OutputK);
 			$$->child[0] = $3;
@@ -243,6 +256,42 @@ assign_stmt:	ID ASSIGN expr {
 				tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
 				//temp = temp < 0 ? 0 : temp;
 		}
+		| ArrID ASSIGN expr {
+			    $$ = newStmtNode(AssignK);
+                $$->child[0] = $1;
+                $$->child[1] = $3;
+                $$->attr.op = new char[10];
+                strcpy($$->attr.op, "=");
+                
+                it = idTable.find(string($1->child[0]->attr.name));
+				// 未定义
+				if(it == idTable.end()) {
+					$1->error = NotDef;
+					$$->error = ChildError;
+				}
+				else {
+					$1->type = it->second->type;
+					$1->child[0]->type = it->second->type;
+					// ID/连续赋值，右部出错
+					if($3->error != Normal) {
+						$$->error = ChildError;
+					}
+					// 类型不一致
+					else if($1->type != $3->type) {
+						$$->error = getDiffError($1->type, $3->type);
+					}
+					else {
+						$$->type = $1->type;
+					}
+					
+					if(isDebug)
+						cout << $1->attr.name << ':' << $1->type << endl;
+				}
+                
+                temp = temp - 2;
+                $$->tempNum = temp++;
+				tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
+		}
 		;
 
 declare_stmt:   var_type idList {
@@ -254,7 +303,11 @@ declare_stmt:   var_type idList {
                     
                     Node* idNode = $2;
                     while(idNode) {
-						string idName = idNode->attr.name;
+						string idName;
+						if(idNode->kind.expKind == IdArrK) {
+							idName = idNode->child[0]->attr.name;
+						}
+						else idName = idNode->attr.name;
 						idNode->type = $1->type;
 						// 重定义
 						if((it = idTable.find(idName)) != idTable.end()) {
@@ -297,6 +350,12 @@ idList:     ID COMMA idList {
                 $$ = $1;
             }
       |     ID {$$ = $1;}
+      |		ArrID {$$ = $1; temp--;}
+      |		ArrID COMMA idList {
+                $1->sibling = $3;
+                $$ = $1;
+                temp--;
+            }
       ;
 
 if_stmt:    IF LPAREN expr RPAREN stmt ELSE stmt {
@@ -923,11 +982,13 @@ expr	:	expr ADD expr	{
         }
 	|	NUMBER	{
             $$ = $1;
+            
             $$->tempNum = temp++;
             tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
         }
     |	CHARACTER {
 			$$ = $1;
+			
 			$$->tempNum = temp++;
 			tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
 		}
@@ -937,14 +998,34 @@ expr	:	expr ADD expr	{
 				$$->error = NotDef;
 			else
 				$$->type = it->second->type;
+				
 			$$->tempNum = temp++;
 			tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
         }
+    |	ArrID {
+			$$ = $1;
+			if((it = idTable.find($1->child[0]->attr.name)) == idTable.end())
+				$$->error = NotDef;
+			else {
+				$$->type = it->second->type;
+				$$->child[0]->type = $$->type;
+			}
+		}
     |   assign_stmt {
 			$$ = $1;
 		}
     |	logical_expr {$$ = $1;}
 	;
+ArrID : ID LFPA expr RFPA {
+			$$ = newExpNode(IdArrK);
+			$$->child[0] = $1;
+			$$->child[1] = $3;
+			
+			temp--;
+			$$->tempNum = temp++;
+			tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
+		}
+		;
 
 NUMBER  :   INT_NUMBER {$$ = $1;}
         |   FLOAT_NUMBER {$$ = $1;}

@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 58 of your 30 day trial period.
+* You are on day 60 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * myparser.h
 * C++ header file generated from myparser.y.
 * 
-* Date: 12/07/19
-* Time: 00:59:29
+* Date: 12/08/19
+* Time: 21:36:00
 * 
 * AYACC Version: 2.07
 ****************************************************************************/
@@ -113,18 +113,20 @@ public:
 #define LPAREN 286
 #define RPAREN 287
 #define COMMA 288
-#define ADD 289
-#define SUB 290
-#define MUL 291
-#define DIV 292
-#define MOD 293
-#define ID 294
-#define INT_NUMBER 295
-#define FLOAT_NUMBER 296
-#define OCT_NUMBER 297
-#define HEX_NUMBER 298
-#define CHARACTER 299
-#define INPUT 300
-#define OUTPUT 301
-#define UMINUS 302
+#define LFPA 289
+#define RFPA 290
+#define ADD 291
+#define SUB 292
+#define MUL 293
+#define DIV 294
+#define MOD 295
+#define ID 296
+#define INT_NUMBER 297
+#define FLOAT_NUMBER 298
+#define OCT_NUMBER 299
+#define HEX_NUMBER 300
+#define CHARACTER 301
+#define INPUT 302
+#define OUTPUT 303
+#define UMINUS 304
 #endif

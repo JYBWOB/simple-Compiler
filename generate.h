@@ -109,7 +109,16 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 			recursive_gen_code(fout, e2);
 			fout << "\tMOV eax, t" << e2->tempNum << endl;
 		}
-		fout << "\tMOV _" << e1->attr.name << ", eax" << endl;
+		if (e1->kind.expKind == IdArrK) {
+			if (needToRecursive(fout, e1->child[1], "ebx")) {
+				recursive_gen_code(fout, root->child[1]);
+				fout << "\tMOV ebx, t" << root->child[1]->tempNum << endl;
+			}
+			fout << "\tMOV _" << e1->child[0]->attr.name << "[ebx*4], eax" << endl;
+		}
+		else {
+			fout << "\tMOV _" << e1->attr.name << ", eax" << endl;
+		}
 		if(root->tempNum != -1)
 			fout << "\tMOV t" << root->tempNum << ", eax" << endl;
 		fout << endl;
@@ -149,25 +158,53 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 		break;
 	case InputK:
 		fout << "; Input stmt" << endl;
-		if(root->child[0]->type == Char)
-			fout << "\tinvoke crt_scanf, SADD(\"%c\", 0), addr _"
-				<< root->child[0]->attr.name << endl;
-		else 
-			fout << "\tinvoke crt_scanf, SADD(\"%d\", 0), addr _"
-				<< root->child[0]->attr.name << endl;
-		break;
-	case OutputK:
-		fout << "; Output stmt" << endl;
-		if (needToRecursive(fout, root->child[0], "eax")) {
-			recursive_gen_code(fout, root->child[0]);
-			fout << "\tMOV eax, t" << root->child[0]->tempNum << endl;
+		if (root->child[0]->kind.expKind == IdArrK) {
+			Node* idNode = root->child[0]; 
+			if (needToRecursive(fout, idNode->child[1], "ebx")) {
+				recursive_gen_code(fout, idNode->child[1]);
+				fout << "\tMOV ebx, t" << idNode->child[1]->tempNum << endl;
+			}
+			if (idNode->type == Char) {
+				fout << "\tinvoke crt_scanf, SADD(\"%c\", 0), addr _"
+					<< idNode->child[0]->attr.name << "[4*ebx]" << endl;
+			}
+			else
+				fout << "\tinvoke crt_scanf, SADD(\"%d\", 0), addr _"
+				<< idNode->child[0]->attr.name << "[4*ebx]" << endl;
 		}
-		if(root->child[0]->type == Char)
+		else {
+			if (root->child[0]->type == Char)
+				fout << "\tinvoke crt_scanf, SADD(\"%c\", 0), addr _"
+				<< root->child[0]->attr.name << endl;
+			else
+				fout << "\tinvoke crt_scanf, SADD(\"%d\", 0), addr _"
+				<< root->child[0]->attr.name << endl;
+		}
+		break;
+	case OutputK: {
+		fout << "; Output stmt" << endl;
+		Node* idNode = root->child[0];
+		if (idNode->kind.expKind == IdArrK) {
+			if (needToRecursive(fout, idNode->child[1], "ebx")) {
+				recursive_gen_code(fout, idNode->child[1]);
+				fout << "\tMOV ebx, _" << idNode->child[1]->tempNum << endl;
+			}
+			fout << "\tMOV eax, _"
+				<< idNode->child[0]->attr.name << "[4*ebx]" << endl;
+		}
+		else {
+			if (needToRecursive(fout, idNode->child[1], "eax")) {
+				recursive_gen_code(fout, idNode->child[1]);
+				fout << "\tMOV eax, t" << idNode->child[1]->tempNum << endl;
+			}
+		}
+		if (idNode->child[0]->type == Char)
 			fout << "\tinvoke crt_printf, SADD(\"%c\", 13, 10), eax" << endl;
 		else
-			fout << "\tinvoke crt_printf, SADD(\"%d\", 13, 10), eax"  << endl;
+			fout << "\tinvoke crt_printf, SADD(\"%d\", 13, 10), eax" << endl;
 		fout << endl;
 		break;
+	}
 	case DeclK:
 		// do nothing
 		break;
@@ -458,6 +495,19 @@ bool needToRecursive(ofstream& fout, Node* root, string target) {
 		fout << "\tMOV " << target << ", _" << root->attr.name << endl;
 		return false;
 	}
+	if (root->kind.expKind == IdArrK) {
+		if (needToRecursive(fout, root->child[1], "ebx")) {
+			recursive_gen_code(fout, root->child[1]);
+			fout << "\tMOV ebx, t" << root->child[1]->tempNum << endl;
+		}
+		if(root->child[0]->type == Char)
+			fout << "\tMOV " << target << ", _" << 
+				root->child[0]->attr.name <<"[4*ebx]" << endl;
+		else 
+			fout << "\tMOV " << target << ", _" <<
+				root->child[0]->attr.name << "[4*ebx]" << endl;
+		return false;
+	}
 	else if (root->kind.expKind == ConstK) {
 		fout << "\tMOV " << target << ", ";
 		switch (root->type)
@@ -517,7 +567,11 @@ void gen_data_code(ofstream& fout, Node* declNode) {
 	assert(str != "");
 
 	for (auto curID = declNode->child[1]; curID != nullptr; curID = curID->sibling) {
-		fout << "\t\t_" << curID->attr.name << str << endl;
+		if(curID->kind.expKind == IdArrK)
+			fout << "\t\t_" << curID->child[0]->attr.name 
+				<< " DWORD " <<  curID->child[1]->attr.value.intVal << " DUP(0)" << endl;
+		else
+			fout << "\t\t_" << curID->attr.name << str << endl;
 	}
 
 	fout << endl;

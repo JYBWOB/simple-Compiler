@@ -28,7 +28,7 @@ enum StmtKind
 
 enum ExpKind
 {
-	OpK, ConstK, IdK
+	OpK, ConstK, IdK, IdArrK
 };
 
 enum TypeKind
@@ -122,6 +122,8 @@ EQUAL {ASSIGN}{ASSIGN}
 LINEEND ;
 LPAREN \(
 RPAREN \)
+LFPA \[
+RFPA \]
 COMMA ,
 ADD \+
 SUB -
@@ -184,6 +186,8 @@ CHARACTER '.'
 {LINEEND} {return LINEEND;}
 {LPAREN} {return LPAREN;}
 {RPAREN} {return RPAREN;}
+{LFPA} {return LFPA;}
+{RFPA} {return RFPA;}
 {COMMA} {return COMMA;}
 {ADD} {return ADD;}
 {SUB} {return SUB;}

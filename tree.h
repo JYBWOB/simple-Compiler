@@ -27,7 +27,7 @@ enum StmtKind
 
 enum ExpKind
 {
-	OpK, ConstK, IdK
+	OpK, ConstK, IdK, IdArrK
 };
 
 enum TypeKind
@@ -242,6 +242,9 @@ void ShowNode(Node* root) {
 		case IdK:
 			cout << "ID Declaration,\tsymbol:" << root->attr.name << ",\t";
 			break;
+		case IdArrK:
+			cout << "Array ID,\t\t\t";
+			break;
 		default:
 			cout << "Error" << endl;
 			break;
@@ -290,10 +293,10 @@ void ShowNode(Node* root) {
 		}
 	}
 	// tempÊä³ö
-	//cout << "\t\t";
-	//if (root->tempNum != -1) {
-	//	cout << "temp:" << root->tempNum;
-	//}
+	cout << "\t\t";
+	if (root->tempNum != -1) {
+		cout << "temp:" << root->tempNum;
+	}
 
 	// labelÊä³ö
 	//cout << "\t\t";

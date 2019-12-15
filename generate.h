@@ -64,7 +64,7 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 	{
 		fout << "; if stmt" << endl;
 		root->child[0]->trueLabel = root->label[0];
-		root->child[1]->falseLabel = root->label[1];
+		root->child[0]->falseLabel = root->label[1];
 		recursive_gen_code(fout, root->child[0]);
 		// ÓÐelse·ÖÖ§
 		if (root->child[2]) {

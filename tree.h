@@ -5,41 +5,69 @@
 #include <fstream>
 using namespace std;
 
-
-enum ErrorKind {
-	Normal, ChildError, SibError,
-	NotDef, ReDef, 
-	IntToChar, CharToInt, IntToBool, BoolToInt, CharToBool, BoolToChar,
-	OutBool, OutVoid,
+enum ErrorKind
+{
+	Normal,
+	ChildError,
+	SibError,
+	NotDef,
+	ReDef,
+	IntToChar,
+	CharToInt,
+	IntToBool,
+	BoolToInt,
+	CharToBool,
+	BoolToChar,
+	OutBool,
+	OutVoid,
 	LogNotBool
 };
 
-
 enum NodeKind
 {
-	StmtK, ExpK, TypeK
+	StmtK,
+	ExpK,
+	TypeK
 };
 
 enum StmtKind
 {
-	IfK, WhileK, AssignK, ForK, CompK, InputK, OutputK, DeclK, EmptyK,
-	FuncK, ReturnK, CallK
+	IfK,
+	WhileK,
+	AssignK,
+	ForK,
+	CompK,
+	InputK,
+	OutputK,
+	DeclK,
+	EmptyK,
+	FuncK,
+	ReturnK,
+	CallK
 };
 
 enum ExpKind
 {
-	OpK, ConstK, IdK, IdArrK
+	OpK,
+	ConstK,
+	IdK,
+	IdArrK
 };
 
 enum TypeKind
 {
-	Void, Integer, Char, Bool, Float, Double
+	Void,
+	Integer,
+	Char,
+	Bool,
+	Float,
+	Double
 };
 
-string kindName[] = { "Void", "Integer", "Char", "Bool", "Float", "Double"};
+string kindName[] = {"Void", "Integer", "Char", "Bool", "Float", "Double"};
 
-
-ErrorKind getDiffError(TypeKind type1, TypeKind type2) {
+ErrorKind getDiffError(TypeKind type1, TypeKind type2)
+{
 	switch (type1)
 	{
 	case Integer:
@@ -91,17 +119,23 @@ extern int LINENO;
 
 struct Node
 {
-	Node* child[MAXCHILDREN];
-	Node* sibling;
+	Node *child[MAXCHILDREN];
+	Node *sibling;
 	NodeKind nodeKind;
-	union { StmtKind stmtKind; ExpKind expKind; } kind;
 	union {
-		char* op;
+		StmtKind stmtKind;
+		ExpKind expKind;
+	} kind;
+	union {
+		char *op;
 		union {
-			int intVal; double doubleVal;
-			float floatVal; char chVal; bool booleanVal;
+			int intVal;
+			double doubleVal;
+			float floatVal;
+			char chVal;
+			bool booleanVal;
 		} value;
-		char* name;
+		char *name;
 	} attr;
 	TypeKind type;
 	ErrorKind error;
@@ -109,16 +143,16 @@ struct Node
 
 	string trueLabel;
 	string falseLabel;
-	string* label;
+	string *label;
 	int tempNum;
 };
 
-Node* newStmtNode(StmtKind sk) 
+Node *newStmtNode(StmtKind sk)
 {
-	Node* result = new Node;
+	Node *result = new Node;
 	assert(result != nullptr);
 	result->nodeKind = StmtK;
-	for(int i = 0; i < MAXCHILDREN; i++)
+	for (int i = 0; i < MAXCHILDREN; i++)
 		result->child[i] = nullptr;
 	result->sibling = nullptr;
 	result->kind.stmtKind = sk;
@@ -132,16 +166,16 @@ Node* newStmtNode(StmtKind sk)
 	return result;
 }
 
-Node* newExpNode(ExpKind ek) 
+Node *newExpNode(ExpKind ek)
 {
-	Node* result = new Node;
+	Node *result = new Node;
 	assert(result != nullptr);
 	result->nodeKind = ExpK;
-	for(int i = 0; i < MAXCHILDREN; i++)
+	for (int i = 0; i < MAXCHILDREN; i++)
 		result->child[i] = nullptr;
 	result->sibling = nullptr;
 	result->kind.expKind = ek;
-    result->type = Void;
+	result->type = Void;
 	result->error = Normal;
 	result->lineNo = LINENO++;
 
@@ -150,12 +184,12 @@ Node* newExpNode(ExpKind ek)
 	return result;
 }
 
-Node* newTypeNode(TypeKind type) 
+Node *newTypeNode(TypeKind type)
 {
-	Node* result = new Node;
+	Node *result = new Node;
 	assert(result != nullptr);
 	result->nodeKind = TypeK;
-	for(int i = 0; i < MAXCHILDREN; i++)
+	for (int i = 0; i < MAXCHILDREN; i++)
 		result->child[i] = nullptr;
 	result->sibling = nullptr;
 	result->type = type;
@@ -167,7 +201,8 @@ Node* newTypeNode(TypeKind type)
 	return result;
 }
 
-void ShowNode(Node* root) {
+void ShowNode(Node *root)
+{
 
 	cout << root->lineNo << ": ";
 	switch (root->nodeKind)
@@ -234,9 +269,13 @@ void ShowNode(Node* root) {
 				break;
 			case Bool:
 				if (root->attr.value.booleanVal)
-					cout << "Const Declaration,\tvalue:" << "true" << ",\t";
+					cout << "Const Declaration,\tvalue:"
+						 << "true"
+						 << ",\t";
 				else
-					cout << "Const Declaration,\tvalue:" << "false" << ",\t";
+					cout << "Const Declaration,\tvalue:"
+						 << "false"
+						 << ",\t";
 				break;
 			case Float:
 				cout << "Const Declaration,\tvalue:" << root->attr.value.floatVal << ",\t";
@@ -292,30 +331,33 @@ void ShowNode(Node* root) {
 		break;
 	}
 	cout << "Children:";
-	for (int i = 0; i < MAXCHILDREN; i++) {
-		if (root->child[i] != nullptr) {
+	for (int i = 0; i < MAXCHILDREN; i++)
+	{
+		if (root->child[i] != nullptr)
+		{
 			cout << root->child[i]->lineNo << ", ";
-			Node* temp = root->child[i]->sibling;
-			while (temp) {
+			Node *temp = root->child[i]->sibling;
+			while (temp)
+			{
 				cout << temp->lineNo << ", ";
 				temp = temp->sibling;
 			}
 		}
 	}
-	// tempÊä³ö
+	// tempï¿½ï¿½ï¿½
 	cout << "\t\t";
-	if (root->tempNum != -1) {
+	if (root->tempNum != -1)
+	{
 		cout << "temp:" << root->tempNum;
 	}
 
-	// labelÊä³ö
+	// labelï¿½ï¿½ï¿½
 	//cout << "\t\t";
 	//if (root->label != nullptr) {
 	//	cout << root->label[0];
 	//}
 
-
-	// ´íÎó¼ì²é
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	cout << "\t\t\t";
 
 	switch (root->error)
@@ -367,10 +409,9 @@ void ShowNode(Node* root) {
 	}
 
 	cout << endl;
-
 }
 
-void postOrderTraverse(Node* root)
+void postOrderTraverse(Node *root)
 {
 	if (root == nullptr)
 		return;

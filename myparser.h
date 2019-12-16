@@ -1,7 +1,7 @@
 /****************************************************************************
 *                     U N R E G I S T E R E D   C O P Y
 * 
-* You are on day 60 of your 30 day trial period.
+* You are on day 68 of your 30 day trial period.
 * 
 * This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 * for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 * myparser.h
 * C++ header file generated from myparser.y.
 * 
-* Date: 12/08/19
-* Time: 21:36:00
+* Date: 12/16/19
+* Time: 21:54:16
 * 
 * AYACC Version: 2.07
 ****************************************************************************/

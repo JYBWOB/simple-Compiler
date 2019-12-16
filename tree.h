@@ -22,7 +22,8 @@ enum NodeKind
 
 enum StmtKind
 {
-	IfK, WhileK, AssignK, ForK, CompK, InputK, OutputK, DeclK, EmptyK
+	IfK, WhileK, AssignK, ForK, CompK, InputK, OutputK, DeclK, EmptyK,
+	FuncK, ReturnK, CallK
 };
 
 enum ExpKind
@@ -201,6 +202,15 @@ void ShowNode(Node* root) {
 			break;
 		case OutputK:
 			cout << "Output statement,\t\t\t";
+			break;
+		case FuncK:
+			cout << "Function define,\t\t\t";
+			break;
+		case ReturnK:
+			cout << "Return stmtment,\t\t\t";
+			break;
+		case CallK:
+			cout << "call function,\t\t\t";
 			break;
 		default:
 			cout << "Error" << endl;

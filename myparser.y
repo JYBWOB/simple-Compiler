@@ -147,7 +147,18 @@ stmts   :   stmts stmt {
         ;
 
 
-stmt :  assign_stmt LINEEND {
+stmt :  function {
+			$$ = $1;
+		}
+	|
+	RETURN expr LINEEND {
+		$$ = newStmtNode(ReturnK);
+		$$->child[0] = $2;
+	}
+	| callfun LINEEND{
+		$$ = $1;
+	}
+	|	assign_stmt LINEEND {
             if(isDebug) {
                 cout << "assign_stmt" << endl;
             }
@@ -210,6 +221,9 @@ stmt :  assign_stmt LINEEND {
 				$$->error = ChildError;
 			}
 			
+			if($3->nodeKind == StmtK && $3->kind.stmtKind == CallK)
+				$$->error = Normal;
+			
 			if($3->kind.expKind == OpK)
 					temp--;
 			//temp = temp < 0 ? 0 : temp;
@@ -218,6 +232,53 @@ stmt :  assign_stmt LINEEND {
 			$$ = newStmtNode(EmptyK);
 		}
      ;
+
+function:	paramDecl LPAREN paramList RPAREN LBRACE stmts RBRACE {
+		$$ = newStmtNode(FuncK);
+		$$->child[0] = $1;
+		$$->child[1] = $3;
+		$$->child[2] = $6;
+	}
+	;
+	
+paramList:	paramDecl COMMA paramList {
+			$1->sibling = $3;
+			$$ = $1;
+		} 
+		| paramDecl {
+			$$ = $1;
+		}
+		| {
+			$$ = nullptr;
+		}
+		;
+
+paramDecl: var_type ID {
+			$$ = newStmtNode(DeclK);
+			$$->child[0] = $1;
+			$$->child[1] = $2;
+		}
+		;
+		
+callfun :	ID LPAREN inParamList RPAREN {
+			$$ = newStmtNode(CallK);
+			$$->child[0] = $1;
+			$$->child[1] = $3;
+		}
+		;
+
+inParamList : expr COMMA inParamList {
+			$$ = $1;
+			$1->sibling = $2;
+		}
+		
+		| expr {
+			$$ = $1;
+		}
+		|  {
+			$$ = nullptr;
+		}
+		;
 
 assign_stmt:	ID ASSIGN expr {
                 
@@ -813,7 +874,12 @@ logical_expr :     |   expr BNE expr {
 		}
 	;
 
-expr	:	expr ADD expr	{
+expr	:	callfun {
+			$$ = $1;
+			$$->tempNum = temp++;
+			tempMaxNum = tempMaxNum < temp ? temp : tempMaxNum;
+		}
+		| expr ADD expr	{
             $$ = newExpNode(OpK);
             $$->attr.op = new char[10];
             strcpy($$->attr.op, "+");

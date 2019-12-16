@@ -1,7 +1,7 @@
 #############################################################################
 #                     U N R E G I S T E R E D   C O P Y
 # 
-# You are on day 60 of your 30 day trial period.
+# You are on day 68 of your 30 day trial period.
 # 
 # This file was produced by an UNREGISTERED COPY of Parser Generator. It is
 # for evaluation purposes only. If you continue to use Parser Generator 30
@@ -18,8 +18,8 @@
 # myparser.v
 # YACC verbose file generated from myparser.y.
 # 
-# Date: 12/08/19
-# Time: 21:36:00
+# Date: 12/16/19
+# Time: 21:54:16
 # 
 # AYACC Version: 2.07
 #############################################################################
@@ -36,81 +36,99 @@
     2  stmts : stmts stmt
     3        | stmt
 
-    4  stmt : assign_stmt LINEEND
-    5       | declare_stmt LINEEND
-    6       | if_stmt
-    7       | while_stmt
-    8       | for_stmt
-    9       | LBRACE stmts RBRACE
-   10       | INPUT LPAREN ID RPAREN LINEEND
-   11       | INPUT LPAREN ArrID RPAREN LINEEND
-   12       | OUTPUT LPAREN expr RPAREN LINEEND
-   13       | LINEEND
+    4  stmt : function
+    5       | RETURN expr LINEEND
+    6       | callfun LINEEND
+    7       | assign_stmt LINEEND
+    8       | declare_stmt LINEEND
+    9       | if_stmt
+   10       | while_stmt
+   11       | for_stmt
+   12       | LBRACE stmts RBRACE
+   13       | INPUT LPAREN ID RPAREN LINEEND
+   14       | INPUT LPAREN ArrID RPAREN LINEEND
+   15       | OUTPUT LPAREN expr RPAREN LINEEND
+   16       | LINEEND
 
-   14  assign_stmt : ID ASSIGN expr
-   15              | ArrID ASSIGN expr
+   17  function : paramDecl LPAREN paramList RPAREN LBRACE stmts RBRACE
 
-   16  declare_stmt : var_type idList
+   18  paramList : paramDecl COMMA paramList
+   19            | paramDecl
+   20            |
 
-   17  var_type : VOID
-   18           | INT
-   19           | FLOAT
-   20           | DOUBLE
-   21           | CHAR
+   21  paramDecl : var_type ID
 
-   22  idList : ID COMMA idList
-   23         | ID
-   24         | ArrID
-   25         | ArrID COMMA idList
+   22  callfun : ID LPAREN inParamList RPAREN
 
-   26  if_stmt : IF LPAREN expr RPAREN stmt ELSE stmt
-   27          | IF LPAREN expr RPAREN stmt
+   23  inParamList : expr COMMA inParamList
+   24              | expr
+   25              |
 
-   28  while_stmt : WHILE LPAREN expr RPAREN stmt
+   26  assign_stmt : ID ASSIGN expr
+   27              | ArrID ASSIGN expr
 
-   29  for_stmt : FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt
-   30           | FOR LPAREN LINEEND expr LINEEND expr RPAREN stmt
-   31           | FOR LPAREN expr LINEEND LINEEND expr RPAREN stmt
-   32           | FOR LPAREN expr LINEEND expr LINEEND RPAREN stmt
-   33           | FOR LPAREN LINEEND LINEEND expr RPAREN stmt
-   34           | FOR LPAREN LINEEND expr LINEEND RPAREN stmt
-   35           | FOR LPAREN expr LINEEND LINEEND RPAREN stmt
-   36           | FOR LPAREN LINEEND LINEEND RPAREN stmt
+   28  declare_stmt : var_type idList
 
-   37  logical_expr :
-   38               | expr BNE expr
-   39               | expr BE expr
-   40               | expr LNE expr
-   41               | expr LE expr
-   42               | expr EQUAL expr
-   43               | expr NOT_EQ expr
-   44               | expr AND expr
-   45               | expr OR expr
-   46               | NOT expr
+   29  var_type : VOID
+   30           | INT
+   31           | FLOAT
+   32           | DOUBLE
+   33           | CHAR
 
-   47  expr : expr ADD expr
-   48       | expr SUB expr
-   49       | expr MUL expr
-   50       | expr DIV expr
-   51       | expr MOD expr
-   52       | expr AND_BIT expr
-   53       | expr OR_BIT expr
-   54       | LPAREN expr RPAREN
-   55       | NUMBER
-   56       | CHARACTER
-   57       | ID
-   58       | ArrID
-   59       | assign_stmt
-   60       | logical_expr
+   34  idList : ID COMMA idList
+   35         | ID
+   36         | ArrID
+   37         | ArrID COMMA idList
 
-   61  ArrID : ID LFPA expr RFPA
+   38  if_stmt : IF LPAREN expr RPAREN stmt ELSE stmt
+   39          | IF LPAREN expr RPAREN stmt
 
-   62  NUMBER : INT_NUMBER
-   63         | FLOAT_NUMBER
-   64         | HEX_NUMBER
-   65         | OCT_NUMBER
+   40  while_stmt : WHILE LPAREN expr RPAREN stmt
 
-   66  Grammar :
+   41  for_stmt : FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt
+   42           | FOR LPAREN LINEEND expr LINEEND expr RPAREN stmt
+   43           | FOR LPAREN expr LINEEND LINEEND expr RPAREN stmt
+   44           | FOR LPAREN expr LINEEND expr LINEEND RPAREN stmt
+   45           | FOR LPAREN LINEEND LINEEND expr RPAREN stmt
+   46           | FOR LPAREN LINEEND expr LINEEND RPAREN stmt
+   47           | FOR LPAREN expr LINEEND LINEEND RPAREN stmt
+   48           | FOR LPAREN LINEEND LINEEND RPAREN stmt
+
+   49  logical_expr :
+   50               | expr BNE expr
+   51               | expr BE expr
+   52               | expr LNE expr
+   53               | expr LE expr
+   54               | expr EQUAL expr
+   55               | expr NOT_EQ expr
+   56               | expr AND expr
+   57               | expr OR expr
+   58               | NOT expr
+
+   59  expr : callfun
+   60       | expr ADD expr
+   61       | expr SUB expr
+   62       | expr MUL expr
+   63       | expr DIV expr
+   64       | expr MOD expr
+   65       | expr AND_BIT expr
+   66       | expr OR_BIT expr
+   67       | LPAREN expr RPAREN
+   68       | NUMBER
+   69       | CHARACTER
+   70       | ID
+   71       | ArrID
+   72       | assign_stmt
+   73       | logical_expr
+
+   74  ArrID : ID LFPA expr RFPA
+
+   75  NUMBER : INT_NUMBER
+   76         | FLOAT_NUMBER
+   77         | HEX_NUMBER
+   78         | OCT_NUMBER
+
+   79  Grammar :
 
 
 ##############################################################################
@@ -152,2456 +170,2908 @@ state 4
 state 5
 	program : MAIN LPAREN RPAREN LBRACE . stmts RBRACE
 
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
 
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 26
-	stmts  goto 27
+	while_stmt  goto 20
+	stmt  goto 21
+	callfun  goto 22
+	stmts  goto 23
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
 
 
 state 6
-	var_type : INT .  (18)
+	stmt : RETURN . expr LINEEND
+	logical_expr : .  (49)
 
-	.  reduce 18
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 42
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
 
 
 state 7
-	var_type : DOUBLE .  (20)
+	var_type : INT .  (30)
 
-	.  reduce 20
+	.  reduce 30
 
 
 state 8
-	var_type : FLOAT .  (19)
+	var_type : DOUBLE .  (32)
 
-	.  reduce 19
+	.  reduce 32
 
 
 state 9
-	var_type : CHAR .  (21)
+	var_type : FLOAT .  (31)
 
-	.  reduce 21
+	.  reduce 31
 
 
 state 10
-	var_type : VOID .  (17)
+	var_type : CHAR .  (33)
 
-	.  reduce 17
+	.  reduce 33
 
 
 state 11
-	while_stmt : WHILE . LPAREN expr RPAREN stmt
+	var_type : VOID .  (29)
 
-	LPAREN  shift 28
+	.  reduce 29
 
 
 state 12
-	for_stmt : FOR . LPAREN LINEEND LINEEND expr RPAREN stmt
-	for_stmt : FOR . LPAREN expr LINEEND expr LINEEND expr RPAREN stmt
-	for_stmt : FOR . LPAREN LINEEND expr LINEEND expr RPAREN stmt
-	for_stmt : FOR . LPAREN expr LINEEND LINEEND expr RPAREN stmt
-	for_stmt : FOR . LPAREN expr LINEEND expr LINEEND RPAREN stmt
-	for_stmt : FOR . LPAREN LINEEND expr LINEEND RPAREN stmt
-	for_stmt : FOR . LPAREN expr LINEEND LINEEND RPAREN stmt
-	for_stmt : FOR . LPAREN LINEEND LINEEND RPAREN stmt
+	while_stmt : WHILE . LPAREN expr RPAREN stmt
 
-	LPAREN  shift 29
+	LPAREN  shift 46
 
 
 state 13
-	stmt : LBRACE . stmts RBRACE
+	for_stmt : FOR . LPAREN LINEEND LINEEND expr RPAREN stmt
+	for_stmt : FOR . LPAREN expr LINEEND LINEEND RPAREN stmt
+	for_stmt : FOR . LPAREN LINEEND LINEEND RPAREN stmt
+	for_stmt : FOR . LPAREN expr LINEEND expr LINEEND RPAREN stmt
+	for_stmt : FOR . LPAREN LINEEND expr LINEEND expr RPAREN stmt
+	for_stmt : FOR . LPAREN expr LINEEND expr LINEEND expr RPAREN stmt
+	for_stmt : FOR . LPAREN LINEEND expr LINEEND RPAREN stmt
+	for_stmt : FOR . LPAREN expr LINEEND LINEEND expr RPAREN stmt
 
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 26
-	stmts  goto 30
+	LPAREN  shift 47
 
 
 state 14
-	if_stmt : IF . LPAREN expr RPAREN stmt ELSE stmt
-	if_stmt : IF . LPAREN expr RPAREN stmt
+	stmt : LBRACE . stmts RBRACE
 
-	LPAREN  shift 31
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 21
+	callfun  goto 22
+	stmts  goto 48
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
 
 
 state 15
-	stmt : LINEEND .  (13)
+	if_stmt : IF . LPAREN expr RPAREN stmt ELSE stmt
+	if_stmt : IF . LPAREN expr RPAREN stmt
 
-	.  reduce 13
+	LPAREN  shift 49
 
 
 state 16
-	ArrID : ID . LFPA expr RFPA
-	assign_stmt : ID . ASSIGN expr
+	stmt : LINEEND .  (16)
 
-	ASSIGN  shift 32
-	LFPA  shift 33
+	.  reduce 16
 
 
 state 17
-	stmt : INPUT . LPAREN ID RPAREN LINEEND
-	stmt : INPUT . LPAREN ArrID RPAREN LINEEND
+	callfun : ID . LPAREN inParamList RPAREN
+	assign_stmt : ID . ASSIGN expr
+	ArrID : ID . LFPA expr RFPA
 
-	LPAREN  shift 34
+	ASSIGN  shift 50
+	LPAREN  shift 51
+	LFPA  shift 52
 
 
 state 18
-	stmt : OUTPUT . LPAREN expr RPAREN LINEEND
+	stmt : INPUT . LPAREN ID RPAREN LINEEND
+	stmt : INPUT . LPAREN ArrID RPAREN LINEEND
 
-	LPAREN  shift 35
+	LPAREN  shift 53
 
 
 state 19
-	declare_stmt : var_type . idList
+	stmt : OUTPUT . LPAREN expr RPAREN LINEEND
 
-	ID  shift 36
-
-	idList  goto 37
-	ArrID  goto 38
+	LPAREN  shift 54
 
 
 state 20
-	stmt : for_stmt .  (8)
+	stmt : while_stmt .  (10)
 
-	.  reduce 8
+	.  reduce 10
 
 
 state 21
-	stmt : if_stmt .  (6)
-
-	.  reduce 6
-
-
-state 22
-	assign_stmt : ArrID . ASSIGN expr
-
-	ASSIGN  shift 39
-
-
-state 23
-	stmt : assign_stmt . LINEEND
-
-	LINEEND  shift 40
-
-
-state 24
-	stmt : declare_stmt . LINEEND
-
-	LINEEND  shift 41
-
-
-state 25
-	stmt : while_stmt .  (7)
-
-	.  reduce 7
-
-
-state 26
 	stmts : stmt .  (3)
 
 	.  reduce 3
 
 
-state 27
+state 22
+	stmt : callfun . LINEEND
+
+	LINEEND  shift 55
+
+
+state 23
 	program : MAIN LPAREN RPAREN LBRACE stmts . RBRACE
 	stmts : stmts . stmt
 
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	RBRACE  shift 42
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	RBRACE  shift 56
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
 
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 43
-
-
-state 28
-	while_stmt : WHILE LPAREN . expr RPAREN stmt
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 54
-	ArrID  goto 55
-	assign_stmt  goto 56
+	while_stmt  goto 20
+	stmt  goto 57
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
 
 
-29: shift-reduce conflict (shift 57, reduce 37) on LINEEND
-state 29
-	for_stmt : FOR LPAREN . LINEEND LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN . expr LINEEND expr LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN . LINEEND expr LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN . expr LINEEND LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN . expr LINEEND expr LINEEND RPAREN stmt
-	for_stmt : FOR LPAREN . LINEEND expr LINEEND RPAREN stmt
-	for_stmt : FOR LPAREN . expr LINEEND LINEEND RPAREN stmt
-	for_stmt : FOR LPAREN . LINEEND LINEEND RPAREN stmt
-	logical_expr : .  (37)
+state 24
+	stmt : assign_stmt . LINEEND
 
-	NOT  shift 44
-	LINEEND  shift 57
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 58
-	ArrID  goto 55
-	assign_stmt  goto 56
+	LINEEND  shift 58
 
 
-state 30
-	stmts : stmts . stmt
-	stmt : LBRACE stmts . RBRACE
-
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	RBRACE  shift 59
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 43
-
-
-state 31
-	if_stmt : IF LPAREN . expr RPAREN stmt ELSE stmt
-	if_stmt : IF LPAREN . expr RPAREN stmt
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 60
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 32
-	assign_stmt : ID ASSIGN . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 61
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 33
-	ArrID : ID LFPA . expr RFPA
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 62
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 34
-	stmt : INPUT LPAREN . ID RPAREN LINEEND
-	stmt : INPUT LPAREN . ArrID RPAREN LINEEND
-
-	ID  shift 63
-
-	ArrID  goto 64
-
-
-state 35
-	stmt : OUTPUT LPAREN . expr RPAREN LINEEND
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 65
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 36
-	idList : ID .  (23)
-	idList : ID . COMMA idList
-	ArrID : ID . LFPA expr RFPA
-
-	COMMA  shift 66
-	LFPA  shift 33
-	.  reduce 23
-
-
-state 37
-	declare_stmt : var_type idList .  (16)
-
-	.  reduce 16
-
-
-state 38
-	idList : ArrID . COMMA idList
-	idList : ArrID .  (24)
-
-	COMMA  shift 67
-	.  reduce 24
-
-
-state 39
-	assign_stmt : ArrID ASSIGN . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 68
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 40
-	stmt : assign_stmt LINEEND .  (4)
+state 25
+	stmt : function .  (4)
 
 	.  reduce 4
 
 
-state 41
-	stmt : declare_stmt LINEEND .  (5)
+state 26
+	stmt : declare_stmt . LINEEND
 
-	.  reduce 5
+	LINEEND  shift 59
+
+
+state 27
+	stmt : if_stmt .  (9)
+
+	.  reduce 9
+
+
+state 28
+	declare_stmt : var_type . idList
+	paramDecl : var_type . ID
+
+	ID  shift 60
+
+	ArrID  goto 61
+	idList  goto 62
+
+
+state 29
+	assign_stmt : ArrID . ASSIGN expr
+
+	ASSIGN  shift 63
+
+
+state 30
+	function : paramDecl . LPAREN paramList RPAREN LBRACE stmts RBRACE
+
+	LPAREN  shift 64
+
+
+state 31
+	stmt : for_stmt .  (11)
+
+	.  reduce 11
+
+
+state 32
+	logical_expr : NOT . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 65
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 33
+	expr : LPAREN . expr RPAREN
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 66
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 34
+	callfun : ID . LPAREN inParamList RPAREN
+	assign_stmt : ID . ASSIGN expr
+	expr : ID .  (70)
+	ArrID : ID . LFPA expr RFPA
+
+	ASSIGN  shift 50
+	LPAREN  shift 51
+	LFPA  shift 52
+	.  reduce 70
+
+
+state 35
+	NUMBER : INT_NUMBER .  (75)
+
+	.  reduce 75
+
+
+state 36
+	NUMBER : FLOAT_NUMBER .  (76)
+
+	.  reduce 76
+
+
+state 37
+	NUMBER : OCT_NUMBER .  (78)
+
+	.  reduce 78
+
+
+state 38
+	NUMBER : HEX_NUMBER .  (77)
+
+	.  reduce 77
+
+
+state 39
+	expr : CHARACTER .  (69)
+
+	.  reduce 69
+
+
+state 40
+	expr : callfun .  (59)
+
+	.  reduce 59
+
+
+state 41
+	expr : assign_stmt .  (72)
+
+	.  reduce 72
 
 
 state 42
+	stmt : RETURN expr . LINEEND
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	LINEEND  shift 77
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+
+
+state 43
+	assign_stmt : ArrID . ASSIGN expr
+	expr : ArrID .  (71)
+
+	ASSIGN  shift 63
+	.  reduce 71
+
+
+state 44
+	expr : logical_expr .  (73)
+
+	.  reduce 73
+
+
+state 45
+	expr : NUMBER .  (68)
+
+	.  reduce 68
+
+
+state 46
+	while_stmt : WHILE LPAREN . expr RPAREN stmt
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 83
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+47: shift-reduce conflict (shift 84, reduce 49) on LINEEND
+state 47
+	for_stmt : FOR LPAREN . LINEEND LINEEND expr RPAREN stmt
+	for_stmt : FOR LPAREN . expr LINEEND LINEEND RPAREN stmt
+	for_stmt : FOR LPAREN . LINEEND LINEEND RPAREN stmt
+	for_stmt : FOR LPAREN . expr LINEEND expr LINEEND RPAREN stmt
+	for_stmt : FOR LPAREN . LINEEND expr LINEEND expr RPAREN stmt
+	for_stmt : FOR LPAREN . expr LINEEND expr LINEEND expr RPAREN stmt
+	for_stmt : FOR LPAREN . LINEEND expr LINEEND RPAREN stmt
+	for_stmt : FOR LPAREN . expr LINEEND LINEEND expr RPAREN stmt
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LINEEND  shift 84
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 85
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 48
+	stmts : stmts . stmt
+	stmt : LBRACE stmts . RBRACE
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	RBRACE  shift 86
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 57
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 49
+	if_stmt : IF LPAREN . expr RPAREN stmt ELSE stmt
+	if_stmt : IF LPAREN . expr RPAREN stmt
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 87
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 50
+	assign_stmt : ID ASSIGN . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 88
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+51: reduce-reduce conflict (reduce 25, reduce 49) on RPAREN
+state 51
+	callfun : ID LPAREN . inParamList RPAREN
+	inParamList : .  (25)
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	RPAREN  reduce 25
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 89
+	ArrID  goto 43
+	inParamList  goto 90
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 52
+	ArrID : ID LFPA . expr RFPA
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 91
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 53
+	stmt : INPUT LPAREN . ID RPAREN LINEEND
+	stmt : INPUT LPAREN . ArrID RPAREN LINEEND
+
+	ID  shift 92
+
+	ArrID  goto 93
+
+
+state 54
+	stmt : OUTPUT LPAREN . expr RPAREN LINEEND
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 94
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 55
+	stmt : callfun LINEEND .  (6)
+
+	.  reduce 6
+
+
+state 56
 	program : MAIN LPAREN RPAREN LBRACE stmts RBRACE .  (1)
 
 	.  reduce 1
 
 
-state 43
+state 57
 	stmts : stmts stmt .  (2)
 
 	.  reduce 2
 
 
-state 44
-	logical_expr : NOT . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 69
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 45
-	expr : LPAREN . expr RPAREN
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 70
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 46
-	expr : ID .  (57)
-	ArrID : ID . LFPA expr RFPA
-	assign_stmt : ID . ASSIGN expr
-
-	ASSIGN  shift 32
-	LFPA  shift 33
-	.  reduce 57
-
-
-state 47
-	NUMBER : INT_NUMBER .  (62)
-
-	.  reduce 62
-
-
-state 48
-	NUMBER : FLOAT_NUMBER .  (63)
-
-	.  reduce 63
-
-
-state 49
-	NUMBER : OCT_NUMBER .  (65)
-
-	.  reduce 65
-
-
-state 50
-	NUMBER : HEX_NUMBER .  (64)
-
-	.  reduce 64
-
-
-state 51
-	expr : CHARACTER .  (56)
-
-	.  reduce 56
-
-
-state 52
-	expr : logical_expr .  (60)
-
-	.  reduce 60
-
-
-state 53
-	expr : NUMBER .  (55)
-
-	.  reduce 55
-
-
-state 54
-	while_stmt : WHILE LPAREN expr . RPAREN stmt
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	RPAREN  shift 81
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-
-
-state 55
-	expr : ArrID .  (58)
-	assign_stmt : ArrID . ASSIGN expr
-
-	ASSIGN  shift 39
-	.  reduce 58
-
-
-state 56
-	expr : assign_stmt .  (59)
-
-	.  reduce 59
-
-
-57: shift-reduce conflict (shift 87, reduce 37) on LINEEND
-state 57
-	for_stmt : FOR LPAREN LINEEND . LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN LINEEND . expr LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN LINEEND . expr LINEEND RPAREN stmt
-	for_stmt : FOR LPAREN LINEEND . LINEEND RPAREN stmt
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LINEEND  shift 87
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 88
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
 state 58
-	for_stmt : FOR LPAREN expr . LINEEND expr LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN expr . LINEEND LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN expr . LINEEND expr LINEEND RPAREN stmt
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	for_stmt : FOR LPAREN expr . LINEEND LINEEND RPAREN stmt
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
+	stmt : assign_stmt LINEEND .  (7)
 
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	LINEEND  shift 89
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
+	.  reduce 7
 
 
 state 59
-	stmt : LBRACE stmts RBRACE .  (9)
+	stmt : declare_stmt LINEEND .  (8)
 
-	.  reduce 9
+	.  reduce 8
 
 
 state 60
-	if_stmt : IF LPAREN expr . RPAREN stmt ELSE stmt
-	if_stmt : IF LPAREN expr . RPAREN stmt
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
+	paramDecl : var_type ID .  (21)
+	idList : ID .  (35)
+	idList : ID . COMMA idList
+	ArrID : ID . LFPA expr RFPA
 
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	RPAREN  shift 90
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
+	COMMA  shift 95
+	LFPA  shift 52
+	LPAREN  reduce 21
+	.  reduce 35
 
 
 state 61
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-	assign_stmt : ID ASSIGN expr .  (14)
+	idList : ArrID .  (36)
+	idList : ArrID . COMMA idList
 
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 14
+	COMMA  shift 96
+	.  reduce 36
 
 
 state 62
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	ArrID : ID LFPA expr . RFPA
-	logical_expr : expr . BE expr
-
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	RFPA  shift 91
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-
-
-state 63
-	ArrID : ID . LFPA expr RFPA
-	stmt : INPUT LPAREN ID . RPAREN LINEEND
-
-	RPAREN  shift 92
-	LFPA  shift 33
-
-
-state 64
-	stmt : INPUT LPAREN ArrID . RPAREN LINEEND
-
-	RPAREN  shift 93
-
-
-state 65
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-	stmt : OUTPUT LPAREN expr . RPAREN LINEEND
-
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	RPAREN  shift 94
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-
-
-state 66
-	idList : ID COMMA . idList
-
-	ID  shift 36
-
-	idList  goto 95
-	ArrID  goto 38
-
-
-state 67
-	idList : ArrID COMMA . idList
-
-	ID  shift 36
-
-	idList  goto 96
-	ArrID  goto 38
-
-
-state 68
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-	assign_stmt : ArrID ASSIGN expr .  (15)
-
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 15
-
-
-state 69
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	logical_expr : NOT expr .  (46)
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 46
-
-
-state 70
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : LPAREN expr . RPAREN
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	RPAREN  shift 97
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-
-
-state 71
-	expr : expr AND_BIT . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 98
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 72
-	logical_expr : expr AND . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 99
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 73
-	expr : expr OR_BIT . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 100
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 74
-	logical_expr : expr OR . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 101
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 75
-	logical_expr : expr BNE . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 102
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 76
-	logical_expr : expr LNE . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 103
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 77
-	logical_expr : expr BE . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 104
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 78
-	logical_expr : expr LE . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 105
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 79
-	logical_expr : expr EQUAL . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 106
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 80
-	logical_expr : expr NOT_EQ . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 107
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 81
-	while_stmt : WHILE LPAREN expr RPAREN . stmt
-
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 108
-
-
-state 82
-	expr : expr ADD . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 109
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 83
-	expr : expr SUB . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 110
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 84
-	expr : expr MUL . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 111
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 85
-	expr : expr DIV . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 112
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 86
-	expr : expr MOD . expr
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 113
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-87: shift-reduce conflict (shift 114, reduce 37) on RPAREN
-state 87
-	for_stmt : FOR LPAREN LINEEND LINEEND . expr RPAREN stmt
-	for_stmt : FOR LPAREN LINEEND LINEEND . RPAREN stmt
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	RPAREN  shift 114
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 115
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 88
-	for_stmt : FOR LPAREN LINEEND expr . LINEEND expr RPAREN stmt
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	for_stmt : FOR LPAREN LINEEND expr . LINEEND RPAREN stmt
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	LINEEND  shift 116
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-
-
-89: shift-reduce conflict (shift 117, reduce 37) on LINEEND
-state 89
-	for_stmt : FOR LPAREN expr LINEEND . expr LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN expr LINEEND . LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN expr LINEEND . expr LINEEND RPAREN stmt
-	for_stmt : FOR LPAREN expr LINEEND . LINEEND RPAREN stmt
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LINEEND  shift 117
-	LPAREN  shift 45
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 118
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 90
-	if_stmt : IF LPAREN expr RPAREN . stmt ELSE stmt
-	if_stmt : IF LPAREN expr RPAREN . stmt
-
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 119
-
-
-state 91
-	ArrID : ID LFPA expr RFPA .  (61)
-
-	.  reduce 61
-
-
-state 92
-	stmt : INPUT LPAREN ID RPAREN . LINEEND
-
-	LINEEND  shift 120
-
-
-state 93
-	stmt : INPUT LPAREN ArrID RPAREN . LINEEND
-
-	LINEEND  shift 121
-
-
-state 94
-	stmt : OUTPUT LPAREN expr RPAREN . LINEEND
-
-	LINEEND  shift 122
-
-
-state 95
-	idList : ID COMMA idList .  (22)
-
-	.  reduce 22
-
-
-state 96
-	idList : ArrID COMMA idList .  (25)
-
-	.  reduce 25
-
-
-state 97
-	expr : LPAREN expr RPAREN .  (54)
-
-	.  reduce 54
-
-
-state 98
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr AND_BIT expr .  (52)
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 52
-
-
-state 99
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr AND expr .  (44)
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 44
-
-
-state 100
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr OR_BIT expr .  (53)
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	AND_BIT  shift 71
-	AND  shift 72
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 53
-
-
-state 101
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr OR expr .  (45)
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	AND_BIT  shift 71
-	AND  shift 72
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 45
-
-
-state 102
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr BNE expr .  (38)
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 38
-
-
-state 103
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr LNE expr .  (40)
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 40
-
-
-state 104
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr BE expr .  (39)
-	logical_expr : expr . BE expr
-
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 39
-
-
-state 105
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr LE expr .  (41)
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 41
-
-
-state 106
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr EQUAL expr .  (42)
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 42
-
-
-state 107
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr NOT_EQ expr .  (43)
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 43
-
-
-state 108
-	while_stmt : WHILE LPAREN expr RPAREN stmt .  (28)
+	declare_stmt : var_type idList .  (28)
 
 	.  reduce 28
 
 
-state 109
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr ADD expr .  (47)
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
+state 63
+	assign_stmt : ArrID ASSIGN . expr
+	logical_expr : .  (49)
 
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 47
-
-
-state 110
-	expr : expr SUB expr .  (48)
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-	.  reduce 48
-
-
-state 111
-	expr : expr . SUB expr
-	expr : expr MUL expr .  (49)
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
 	.  reduce 49
 
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 97
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
 
-state 112
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
+
+state 64
+	function : paramDecl LPAREN . paramList RPAREN LBRACE stmts RBRACE
+	paramList : .  (20)
+
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	.  reduce 20
+
+	var_type  goto 98
+	paramDecl  goto 99
+	paramList  goto 100
+
+
+state 65
 	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr DIV expr .  (50)
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
 	logical_expr : expr . NOT_EQ expr
 	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	.  reduce 50
-
-
-state 113
-	expr : expr . SUB expr
 	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
 	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : NOT expr .  (58)
+	logical_expr : expr . BE expr
 	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr MOD expr .  (51)
 	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 58
+
+
+state 66
+	logical_expr : expr . BNE expr
 	logical_expr : expr . NOT_EQ expr
 	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	.  reduce 51
-
-
-state 114
-	for_stmt : FOR LPAREN LINEEND LINEEND RPAREN . stmt
-
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 123
-
-
-state 115
-	for_stmt : FOR LPAREN LINEEND LINEEND expr . RPAREN stmt
-	expr : expr . SUB expr
 	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
 	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
 	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
 	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : LPAREN expr . RPAREN
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	RPAREN  shift 101
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+
+
+state 67
+	expr : expr AND_BIT . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 102
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 68
+	logical_expr : expr AND . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 103
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 69
+	expr : expr OR_BIT . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 104
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 70
+	logical_expr : expr OR . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 105
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 71
+	logical_expr : expr BNE . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 106
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 72
+	logical_expr : expr LNE . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 107
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 73
+	logical_expr : expr BE . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 108
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 74
+	logical_expr : expr LE . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 109
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 75
+	logical_expr : expr EQUAL . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 110
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 76
+	logical_expr : expr NOT_EQ . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 111
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 77
+	stmt : RETURN expr LINEEND .  (5)
+
+	.  reduce 5
+
+
+state 78
+	expr : expr ADD . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 112
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 79
+	expr : expr SUB . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 113
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 80
+	expr : expr MUL . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 114
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 81
+	expr : expr DIV . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 115
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 82
+	expr : expr MOD . expr
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 116
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 83
+	logical_expr : expr . BNE expr
 	logical_expr : expr . NOT_EQ expr
 	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
-
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	RPAREN  shift 124
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-
-
-116: shift-reduce conflict (shift 125, reduce 37) on RPAREN
-state 116
-	for_stmt : FOR LPAREN LINEEND expr LINEEND . expr RPAREN stmt
-	for_stmt : FOR LPAREN LINEEND expr LINEEND . RPAREN stmt
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	RPAREN  shift 125
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 126
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-117: shift-reduce conflict (shift 127, reduce 37) on RPAREN
-state 117
-	for_stmt : FOR LPAREN expr LINEEND LINEEND . expr RPAREN stmt
-	for_stmt : FOR LPAREN expr LINEEND LINEEND . RPAREN stmt
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	RPAREN  shift 127
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 128
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 118
-	for_stmt : FOR LPAREN expr LINEEND expr . LINEEND expr RPAREN stmt
-	for_stmt : FOR LPAREN expr LINEEND expr . LINEEND RPAREN stmt
-	expr : expr . SUB expr
 	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
 	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
 	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
 	expr : expr . MOD expr
+	expr : expr . ADD expr
+	while_stmt : WHILE LPAREN expr . RPAREN stmt
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	RPAREN  shift 117
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+
+
+84: shift-reduce conflict (shift 118, reduce 49) on LINEEND
+state 84
+	for_stmt : FOR LPAREN LINEEND . LINEEND expr RPAREN stmt
+	for_stmt : FOR LPAREN LINEEND . LINEEND RPAREN stmt
+	for_stmt : FOR LPAREN LINEEND . expr LINEEND expr RPAREN stmt
+	for_stmt : FOR LPAREN LINEEND . expr LINEEND RPAREN stmt
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LINEEND  shift 118
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 119
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 85
+	for_stmt : FOR LPAREN expr . LINEEND LINEEND RPAREN stmt
+	logical_expr : expr . BNE expr
+	for_stmt : FOR LPAREN expr . LINEEND expr LINEEND RPAREN stmt
 	logical_expr : expr . NOT_EQ expr
 	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	for_stmt : FOR LPAREN expr . LINEEND expr LINEEND expr RPAREN stmt
+	logical_expr : expr . EQUAL expr
 	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	for_stmt : FOR LPAREN expr . LINEEND LINEEND expr RPAREN stmt
+	expr : expr . OR_BIT expr
 
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	LINEEND  shift 129
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
-
-
-119: shift-reduce conflict (shift 130, reduce 27) on ELSE
-state 119
-	if_stmt : IF LPAREN expr RPAREN stmt . ELSE stmt
-	if_stmt : IF LPAREN expr RPAREN stmt .  (27)
-
-	ELSE  shift 130
-	.  reduce 27
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	LINEEND  shift 120
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
 
 
-state 120
-	stmt : INPUT LPAREN ID RPAREN LINEEND .  (10)
-
-	.  reduce 10
-
-
-state 121
-	stmt : INPUT LPAREN ArrID RPAREN LINEEND .  (11)
-
-	.  reduce 11
-
-
-state 122
-	stmt : OUTPUT LPAREN expr RPAREN LINEEND .  (12)
+state 86
+	stmt : LBRACE stmts RBRACE .  (12)
 
 	.  reduce 12
 
 
-state 123
-	for_stmt : FOR LPAREN LINEEND LINEEND RPAREN stmt .  (36)
+state 87
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	if_stmt : IF LPAREN expr . RPAREN stmt ELSE stmt
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	if_stmt : IF LPAREN expr . RPAREN stmt
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
 
-	.  reduce 36
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	RPAREN  shift 121
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+
+
+state 88
+	assign_stmt : ID ASSIGN expr .  (26)
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 26
+
+
+state 89
+	inParamList : expr .  (24)
+	inParamList : expr . COMMA inParamList
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	COMMA  shift 122
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 24
+
+
+state 90
+	callfun : ID LPAREN inParamList . RPAREN
+
+	RPAREN  shift 123
+
+
+state 91
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+	ArrID : ID LFPA expr . RFPA
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	RFPA  shift 124
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+
+
+state 92
+	stmt : INPUT LPAREN ID . RPAREN LINEEND
+	ArrID : ID . LFPA expr RFPA
+
+	RPAREN  shift 125
+	LFPA  shift 52
+
+
+state 93
+	stmt : INPUT LPAREN ArrID . RPAREN LINEEND
+
+	RPAREN  shift 126
+
+
+state 94
+	stmt : OUTPUT LPAREN expr . RPAREN LINEEND
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	RPAREN  shift 127
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+
+
+state 95
+	idList : ID COMMA . idList
+
+	ID  shift 128
+
+	ArrID  goto 61
+	idList  goto 129
+
+
+state 96
+	idList : ArrID COMMA . idList
+
+	ID  shift 128
+
+	ArrID  goto 61
+	idList  goto 130
+
+
+state 97
+	assign_stmt : ArrID ASSIGN expr .  (27)
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 27
+
+
+state 98
+	paramDecl : var_type . ID
+
+	ID  shift 131
+
+
+state 99
+	paramList : paramDecl .  (19)
+	paramList : paramDecl . COMMA paramList
+
+	COMMA  shift 132
+	.  reduce 19
+
+
+state 100
+	function : paramDecl LPAREN paramList . RPAREN LBRACE stmts RBRACE
+
+	RPAREN  shift 133
+
+
+state 101
+	expr : LPAREN expr RPAREN .  (67)
+
+	.  reduce 67
+
+
+state 102
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr AND_BIT expr .  (65)
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 65
+
+
+state 103
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr AND expr .  (56)
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 56
+
+
+state 104
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr OR_BIT expr .  (66)
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 66
+
+
+state 105
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr OR expr .  (57)
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 57
+
+
+state 106
+	logical_expr : expr BNE expr .  (50)
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 50
+
+
+state 107
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr LNE expr .  (52)
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 52
+
+
+state 108
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr BE expr .  (51)
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 51
+
+
+state 109
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr LE expr .  (53)
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 53
+
+
+state 110
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr EQUAL expr .  (54)
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 54
+
+
+state 111
+	logical_expr : expr . BNE expr
+	logical_expr : expr NOT_EQ expr .  (55)
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 55
+
+
+state 112
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr ADD expr .  (60)
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 60
+
+
+state 113
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr SUB expr .  (61)
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+	.  reduce 61
+
+
+state 114
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr MUL expr .  (62)
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	.  reduce 62
+
+
+state 115
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr DIV expr .  (63)
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	.  reduce 63
+
+
+state 116
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr MOD expr .  (64)
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	.  reduce 64
+
+
+state 117
+	while_stmt : WHILE LPAREN expr RPAREN . stmt
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 134
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+118: shift-reduce conflict (shift 135, reduce 49) on RPAREN
+state 118
+	for_stmt : FOR LPAREN LINEEND LINEEND . expr RPAREN stmt
+	for_stmt : FOR LPAREN LINEEND LINEEND . RPAREN stmt
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	RPAREN  shift 135
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 136
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 119
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	for_stmt : FOR LPAREN LINEEND expr . LINEEND expr RPAREN stmt
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	for_stmt : FOR LPAREN LINEEND expr . LINEEND RPAREN stmt
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	LINEEND  shift 137
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+
+
+120: shift-reduce conflict (shift 138, reduce 49) on LINEEND
+state 120
+	for_stmt : FOR LPAREN expr LINEEND . LINEEND RPAREN stmt
+	for_stmt : FOR LPAREN expr LINEEND . expr LINEEND RPAREN stmt
+	for_stmt : FOR LPAREN expr LINEEND . expr LINEEND expr RPAREN stmt
+	for_stmt : FOR LPAREN expr LINEEND . LINEEND expr RPAREN stmt
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LINEEND  shift 138
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 139
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 121
+	if_stmt : IF LPAREN expr RPAREN . stmt ELSE stmt
+	if_stmt : IF LPAREN expr RPAREN . stmt
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 140
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+122: reduce-reduce conflict (reduce 25, reduce 49) on RPAREN
+state 122
+	inParamList : expr COMMA . inParamList
+	inParamList : .  (25)
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	RPAREN  reduce 25
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 89
+	ArrID  goto 43
+	inParamList  goto 141
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 123
+	callfun : ID LPAREN inParamList RPAREN .  (22)
+
+	.  reduce 22
 
 
 state 124
-	for_stmt : FOR LPAREN LINEEND LINEEND expr RPAREN . stmt
+	ArrID : ID LFPA expr RFPA .  (74)
 
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 131
+	.  reduce 74
 
 
 state 125
-	for_stmt : FOR LPAREN LINEEND expr LINEEND RPAREN . stmt
+	stmt : INPUT LPAREN ID RPAREN . LINEEND
 
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 132
+	LINEEND  shift 142
 
 
 state 126
-	for_stmt : FOR LPAREN LINEEND expr LINEEND expr . RPAREN stmt
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
+	stmt : INPUT LPAREN ArrID RPAREN . LINEEND
 
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	RPAREN  shift 133
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
+	LINEEND  shift 143
 
 
 state 127
-	for_stmt : FOR LPAREN expr LINEEND LINEEND RPAREN . stmt
+	stmt : OUTPUT LPAREN expr RPAREN . LINEEND
 
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 134
+	LINEEND  shift 144
 
 
 state 128
-	for_stmt : FOR LPAREN expr LINEEND LINEEND expr . RPAREN stmt
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
-	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
-	logical_expr : expr . NOT_EQ expr
-	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
-	logical_expr : expr . BE expr
+	idList : ID .  (35)
+	idList : ID . COMMA idList
+	ArrID : ID . LFPA expr RFPA
 
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	RPAREN  shift 135
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
+	COMMA  shift 95
+	LFPA  shift 52
+	.  reduce 35
 
 
-129: shift-reduce conflict (shift 136, reduce 37) on RPAREN
 state 129
-	for_stmt : FOR LPAREN expr LINEEND expr LINEEND . expr RPAREN stmt
-	for_stmt : FOR LPAREN expr LINEEND expr LINEEND . RPAREN stmt
-	logical_expr : .  (37)
-
-	NOT  shift 44
-	LPAREN  shift 45
-	RPAREN  shift 136
-	ID  shift 46
-	INT_NUMBER  shift 47
-	FLOAT_NUMBER  shift 48
-	OCT_NUMBER  shift 49
-	HEX_NUMBER  shift 50
-	CHARACTER  shift 51
-	.  reduce 37
-
-	logical_expr  goto 52
-	NUMBER  goto 53
-	expr  goto 137
-	ArrID  goto 55
-	assign_stmt  goto 56
-
-
-state 130
-	if_stmt : IF LPAREN expr RPAREN stmt ELSE . stmt
-
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 138
-
-
-state 131
-	for_stmt : FOR LPAREN LINEEND LINEEND expr RPAREN stmt .  (33)
-
-	.  reduce 33
-
-
-state 132
-	for_stmt : FOR LPAREN LINEEND expr LINEEND RPAREN stmt .  (34)
+	idList : ID COMMA idList .  (34)
 
 	.  reduce 34
 
 
+state 130
+	idList : ArrID COMMA idList .  (37)
+
+	.  reduce 37
+
+
+state 131
+	paramDecl : var_type ID .  (21)
+
+	.  reduce 21
+
+
+state 132
+	paramList : paramDecl COMMA . paramList
+	paramList : .  (20)
+
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	.  reduce 20
+
+	var_type  goto 98
+	paramDecl  goto 99
+	paramList  goto 145
+
+
 state 133
-	for_stmt : FOR LPAREN LINEEND expr LINEEND expr RPAREN . stmt
+	function : paramDecl LPAREN paramList RPAREN . LBRACE stmts RBRACE
 
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 139
+	LBRACE  shift 146
 
 
 state 134
-	for_stmt : FOR LPAREN expr LINEEND LINEEND RPAREN stmt .  (35)
+	while_stmt : WHILE LPAREN expr RPAREN stmt .  (40)
 
-	.  reduce 35
+	.  reduce 40
 
 
 state 135
-	for_stmt : FOR LPAREN expr LINEEND LINEEND expr RPAREN . stmt
+	for_stmt : FOR LPAREN LINEEND LINEEND RPAREN . stmt
 
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
 
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 140
+	while_stmt  goto 20
+	stmt  goto 147
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
 
 
 state 136
-	for_stmt : FOR LPAREN expr LINEEND expr LINEEND RPAREN . stmt
-
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 141
-
-
-state 137
-	for_stmt : FOR LPAREN expr LINEEND expr LINEEND expr . RPAREN stmt
-	expr : expr . SUB expr
-	expr : expr . MUL expr
-	logical_expr : expr . EQUAL expr
-	expr : expr . OR_BIT expr
+	for_stmt : FOR LPAREN LINEEND LINEEND expr . RPAREN stmt
 	logical_expr : expr . BNE expr
-	logical_expr : expr . LE expr
-	expr : expr . ADD expr
-	expr : expr . DIV expr
-	logical_expr : expr . LNE expr
-	expr : expr . AND_BIT expr
-	expr : expr . MOD expr
 	logical_expr : expr . NOT_EQ expr
 	logical_expr : expr . OR expr
-	logical_expr : expr . AND expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
 	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
 
-	AND_BIT  shift 71
-	AND  shift 72
-	OR_BIT  shift 73
-	OR  shift 74
-	BNE  shift 75
-	LNE  shift 76
-	BE  shift 77
-	LE  shift 78
-	EQUAL  shift 79
-	NOT_EQ  shift 80
-	RPAREN  shift 142
-	ADD  shift 82
-	SUB  shift 83
-	MUL  shift 84
-	DIV  shift 85
-	MOD  shift 86
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	RPAREN  shift 148
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
 
 
+137: shift-reduce conflict (shift 149, reduce 49) on RPAREN
+state 137
+	for_stmt : FOR LPAREN LINEEND expr LINEEND . expr RPAREN stmt
+	for_stmt : FOR LPAREN LINEEND expr LINEEND . RPAREN stmt
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	RPAREN  shift 149
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 150
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+138: shift-reduce conflict (shift 151, reduce 49) on RPAREN
 state 138
-	if_stmt : IF LPAREN expr RPAREN stmt ELSE stmt .  (26)
+	for_stmt : FOR LPAREN expr LINEEND LINEEND . RPAREN stmt
+	for_stmt : FOR LPAREN expr LINEEND LINEEND . expr RPAREN stmt
+	logical_expr : .  (49)
 
-	.  reduce 26
+	NOT  shift 32
+	LPAREN  shift 33
+	RPAREN  shift 151
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 152
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
 
 
 state 139
-	for_stmt : FOR LPAREN LINEEND expr LINEEND expr RPAREN stmt .  (30)
+	logical_expr : expr . BNE expr
+	for_stmt : FOR LPAREN expr LINEEND expr . LINEEND RPAREN stmt
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	for_stmt : FOR LPAREN expr LINEEND expr . LINEEND expr RPAREN stmt
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
 
-	.  reduce 30
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	LINEEND  shift 153
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
 
 
+140: shift-reduce conflict (shift 154, reduce 39) on ELSE
 state 140
-	for_stmt : FOR LPAREN expr LINEEND LINEEND expr RPAREN stmt .  (31)
+	if_stmt : IF LPAREN expr RPAREN stmt . ELSE stmt
+	if_stmt : IF LPAREN expr RPAREN stmt .  (39)
 
-	.  reduce 31
+	ELSE  shift 154
+	.  reduce 39
 
 
 state 141
-	for_stmt : FOR LPAREN expr LINEEND expr LINEEND RPAREN stmt .  (32)
+	inParamList : expr COMMA inParamList .  (23)
 
-	.  reduce 32
+	.  reduce 23
 
 
 state 142
-	for_stmt : FOR LPAREN expr LINEEND expr LINEEND expr RPAREN . stmt
+	stmt : INPUT LPAREN ID RPAREN LINEEND .  (13)
 
-	INT  shift 6
-	DOUBLE  shift 7
-	FLOAT  shift 8
-	CHAR  shift 9
-	VOID  shift 10
-	WHILE  shift 11
-	FOR  shift 12
-	LBRACE  shift 13
-	IF  shift 14
-	LINEEND  shift 15
-	ID  shift 16
-	INPUT  shift 17
-	OUTPUT  shift 18
-
-	var_type  goto 19
-	for_stmt  goto 20
-	if_stmt  goto 21
-	ArrID  goto 22
-	assign_stmt  goto 23
-	declare_stmt  goto 24
-	while_stmt  goto 25
-	stmt  goto 143
+	.  reduce 13
 
 
 state 143
-	for_stmt : FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt .  (29)
+	stmt : INPUT LPAREN ArrID RPAREN LINEEND .  (14)
 
-	.  reduce 29
+	.  reduce 14
+
+
+state 144
+	stmt : OUTPUT LPAREN expr RPAREN LINEEND .  (15)
+
+	.  reduce 15
+
+
+state 145
+	paramList : paramDecl COMMA paramList .  (18)
+
+	.  reduce 18
+
+
+state 146
+	function : paramDecl LPAREN paramList RPAREN LBRACE . stmts RBRACE
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 21
+	callfun  goto 22
+	stmts  goto 155
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 147
+	for_stmt : FOR LPAREN LINEEND LINEEND RPAREN stmt .  (48)
+
+	.  reduce 48
+
+
+state 148
+	for_stmt : FOR LPAREN LINEEND LINEEND expr RPAREN . stmt
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 156
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 149
+	for_stmt : FOR LPAREN LINEEND expr LINEEND RPAREN . stmt
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 157
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 150
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	for_stmt : FOR LPAREN LINEEND expr LINEEND expr . RPAREN stmt
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	RPAREN  shift 158
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+
+
+state 151
+	for_stmt : FOR LPAREN expr LINEEND LINEEND RPAREN . stmt
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 159
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 152
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	for_stmt : FOR LPAREN expr LINEEND LINEEND expr . RPAREN stmt
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	RPAREN  shift 160
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+
+
+153: shift-reduce conflict (shift 161, reduce 49) on RPAREN
+state 153
+	for_stmt : FOR LPAREN expr LINEEND expr LINEEND . RPAREN stmt
+	for_stmt : FOR LPAREN expr LINEEND expr LINEEND . expr RPAREN stmt
+	logical_expr : .  (49)
+
+	NOT  shift 32
+	LPAREN  shift 33
+	RPAREN  shift 161
+	ID  shift 34
+	INT_NUMBER  shift 35
+	FLOAT_NUMBER  shift 36
+	OCT_NUMBER  shift 37
+	HEX_NUMBER  shift 38
+	CHARACTER  shift 39
+	.  reduce 49
+
+	callfun  goto 40
+	assign_stmt  goto 41
+	expr  goto 162
+	ArrID  goto 43
+	logical_expr  goto 44
+	NUMBER  goto 45
+
+
+state 154
+	if_stmt : IF LPAREN expr RPAREN stmt ELSE . stmt
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 163
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 155
+	stmts : stmts . stmt
+	function : paramDecl LPAREN paramList RPAREN LBRACE stmts . RBRACE
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	RBRACE  shift 164
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 57
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 156
+	for_stmt : FOR LPAREN LINEEND LINEEND expr RPAREN stmt .  (45)
+
+	.  reduce 45
+
+
+state 157
+	for_stmt : FOR LPAREN LINEEND expr LINEEND RPAREN stmt .  (46)
+
+	.  reduce 46
+
+
+state 158
+	for_stmt : FOR LPAREN LINEEND expr LINEEND expr RPAREN . stmt
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 165
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 159
+	for_stmt : FOR LPAREN expr LINEEND LINEEND RPAREN stmt .  (47)
+
+	.  reduce 47
+
+
+state 160
+	for_stmt : FOR LPAREN expr LINEEND LINEEND expr RPAREN . stmt
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 166
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 161
+	for_stmt : FOR LPAREN expr LINEEND expr LINEEND RPAREN . stmt
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 167
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 162
+	logical_expr : expr . BNE expr
+	logical_expr : expr . NOT_EQ expr
+	logical_expr : expr . OR expr
+	expr : expr . MUL expr
+	expr : expr . DIV expr
+	logical_expr : expr . LE expr
+	expr : expr . SUB expr
+	for_stmt : FOR LPAREN expr LINEEND expr LINEEND expr . RPAREN stmt
+	logical_expr : expr . EQUAL expr
+	logical_expr : expr . BE expr
+	logical_expr : expr . LNE expr
+	expr : expr . MOD expr
+	expr : expr . ADD expr
+	expr : expr . AND_BIT expr
+	logical_expr : expr . AND expr
+	expr : expr . OR_BIT expr
+
+	AND_BIT  shift 67
+	AND  shift 68
+	OR_BIT  shift 69
+	OR  shift 70
+	BNE  shift 71
+	LNE  shift 72
+	BE  shift 73
+	LE  shift 74
+	EQUAL  shift 75
+	NOT_EQ  shift 76
+	RPAREN  shift 168
+	ADD  shift 78
+	SUB  shift 79
+	MUL  shift 80
+	DIV  shift 81
+	MOD  shift 82
+
+
+state 163
+	if_stmt : IF LPAREN expr RPAREN stmt ELSE stmt .  (38)
+
+	.  reduce 38
+
+
+state 164
+	function : paramDecl LPAREN paramList RPAREN LBRACE stmts RBRACE .  (17)
+
+	.  reduce 17
+
+
+state 165
+	for_stmt : FOR LPAREN LINEEND expr LINEEND expr RPAREN stmt .  (42)
+
+	.  reduce 42
+
+
+state 166
+	for_stmt : FOR LPAREN expr LINEEND LINEEND expr RPAREN stmt .  (43)
+
+	.  reduce 43
+
+
+state 167
+	for_stmt : FOR LPAREN expr LINEEND expr LINEEND RPAREN stmt .  (44)
+
+	.  reduce 44
+
+
+state 168
+	for_stmt : FOR LPAREN expr LINEEND expr LINEEND expr RPAREN . stmt
+
+	RETURN  shift 6
+	INT  shift 7
+	DOUBLE  shift 8
+	FLOAT  shift 9
+	CHAR  shift 10
+	VOID  shift 11
+	WHILE  shift 12
+	FOR  shift 13
+	LBRACE  shift 14
+	IF  shift 15
+	LINEEND  shift 16
+	ID  shift 17
+	INPUT  shift 18
+	OUTPUT  shift 19
+
+	while_stmt  goto 20
+	stmt  goto 169
+	callfun  goto 22
+	assign_stmt  goto 24
+	function  goto 25
+	declare_stmt  goto 26
+	if_stmt  goto 27
+	var_type  goto 28
+	ArrID  goto 29
+	paramDecl  goto 30
+	for_stmt  goto 31
+
+
+state 169
+	for_stmt : FOR LPAREN expr LINEEND expr LINEEND expr RPAREN stmt .  (41)
+
+	.  reduce 41
 
 
 Rules never reduced
-	Grammar :  (66)
+	Grammar :  (79)
 
 
 ##############################################################################
 # Summary
 ##############################################################################
 
-State 29 contains 1 shift-reduce conflict(s)
-State 57 contains 1 shift-reduce conflict(s)
-State 87 contains 1 shift-reduce conflict(s)
-State 89 contains 1 shift-reduce conflict(s)
-State 116 contains 1 shift-reduce conflict(s)
-State 117 contains 1 shift-reduce conflict(s)
-State 119 contains 1 shift-reduce conflict(s)
-State 129 contains 1 shift-reduce conflict(s)
+State 47 contains 1 shift-reduce conflict(s)
+State 51 contains 1 reduce-reduce conflict(s)
+State 84 contains 1 shift-reduce conflict(s)
+State 118 contains 1 shift-reduce conflict(s)
+State 120 contains 1 shift-reduce conflict(s)
+State 122 contains 1 reduce-reduce conflict(s)
+State 137 contains 1 shift-reduce conflict(s)
+State 138 contains 1 shift-reduce conflict(s)
+State 140 contains 1 shift-reduce conflict(s)
+State 153 contains 1 shift-reduce conflict(s)
 
 
-45 token(s), 16 nonterminal(s)
-67 grammar rule(s), 144 state(s)
+46 token(s), 21 nonterminal(s)
+80 grammar rule(s), 170 state(s)
 
 
 ##############################################################################

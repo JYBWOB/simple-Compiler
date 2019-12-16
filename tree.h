@@ -5,63 +5,34 @@
 #include <fstream>
 using namespace std;
 
-enum ErrorKind
-{
-	Normal,
-	ChildError,
-	SibError,
-	NotDef,
-	ReDef,
-	IntToChar,
-	CharToInt,
-	IntToBool,
-	BoolToInt,
-	CharToBool,
-	BoolToChar,
-	OutBool,
-	OutVoid,
+enum ErrorKind {
+	Normal, ChildError, SibError,
+	NotDef, ReDef, 
+	IntToChar, CharToInt, IntToBool, BoolToInt, CharToBool, BoolToChar,
+	OutBool, OutVoid,
 	LogNotBool
 };
 
+
 enum NodeKind
 {
-	StmtK,
-	ExpK,
-	TypeK
+	StmtK, ExpK, TypeK
 };
 
 enum StmtKind
 {
-	IfK,
-	WhileK,
-	AssignK,
-	ForK,
-	CompK,
-	InputK,
-	OutputK,
-	DeclK,
-	EmptyK,
-	FuncK,
-	ReturnK,
-	CallK
+	IfK, WhileK, AssignK, ForK, CompK, InputK, OutputK, DeclK, EmptyK,
+	FuncK, ReturnK, CallK
 };
 
 enum ExpKind
 {
-	OpK,
-	ConstK,
-	IdK,
-	IdArrK
+	OpK, ConstK, IdK, IdArrK
 };
 
 enum TypeKind
 {
-	Void,
-	Integer,
-	Char,
-	Bool,
-	Float,
-	Double
+	Void, Integer, Char, Bool, Float, Double
 };
 
 string kindName[] = {"Void", "Integer", "Char", "Bool", "Float", "Double"};

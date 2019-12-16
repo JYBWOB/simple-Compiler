@@ -2,6 +2,7 @@
 #include <fstream>
 #include "tree.h"
 #include <string>
+#include <stack>
 using namespace std;
 
 bool debug = true;
@@ -13,8 +14,14 @@ extern void genAsmCode(ofstream& fout, Node *root);
 extern void initFile(ofstream& fout);
 // 写数据段
 extern void writeDataCode(ofstream& fout, Node* root);
+// 写函数定义
+extern void writeFunCode(ofstream& fout, Node* root);
+
 // 根据声明语句节点，写对应的变量代码段
 extern void gen_data_code(ofstream& fout, Node* declNode);
+// 根据函数节点生成函数代码
+extern void gen_fun_code(ofstream& fout, Node* root);
+
 // 针对节点生成代码/递归函数
 extern void recursive_gen_code(ofstream& fout, Node* root);
 
@@ -31,6 +38,7 @@ void genAsmCode(ofstream& fout, Node *root) {
 	initFile(fout);
 	writeDataCode(fout, root);
 	fout << "\t.code" << endl;
+	writeFunCode(fout, root);
 	fout << "\t_start:" << endl;
 	recursive_gen_code(fout, root);
 	fout << "\tinvoke crt_printf, SADD(\"按任意键继续...\")" << endl;
@@ -64,7 +72,7 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 	{
 		fout << "; if stmt" << endl;
 		root->child[0]->trueLabel = root->label[0];
-		root->child[1]->falseLabel = root->label[1];
+		root->child[0]->falseLabel = root->label[1];
 		recursive_gen_code(fout, root->child[0]);
 		// 有else分支
 		if (root->child[2]) {
@@ -193,18 +201,56 @@ void stmt_gen_code(ofstream& fout, Node* root) {
 				<< idNode->child[0]->attr.name << "[4*ebx]" << endl;
 		}
 		else {
-			if (needToRecursive(fout, idNode->child[1], "eax")) {
-				recursive_gen_code(fout, idNode->child[1]);
-				fout << "\tMOV eax, t" << idNode->child[1]->tempNum << endl;
+			if (needToRecursive(fout, idNode, "eax")) {
+				recursive_gen_code(fout, idNode);
+				fout << "\tMOV eax, t" << idNode->tempNum << endl;
 			}
 		}
-		if (idNode->child[0]->type == Char)
+		if (idNode->type == Char)
 			fout << "\tinvoke crt_printf, SADD(\"%c\", 13, 10), eax" << endl;
 		else
 			fout << "\tinvoke crt_printf, SADD(\"%d\", 13, 10), eax" << endl;
 		fout << endl;
 		break;
 	}
+	case ReturnK:
+		
+		fout << "\tpop ebx" << endl;
+		fout << "\tpop eax" << endl;
+		fout << "\tpop ebp" << endl;
+		// TODO:
+		if (root->child[0] && needToRecursive(fout, root->child[0], "ecx")) {
+			recursive_gen_code(fout, root->child[0]);
+			fout << "\tMOV ecx, t" << root->child[0]->tempNum << endl;
+		}
+		fout << "\tret" << endl;
+		
+		break;
+	case CallK: {
+			Node* fun = root->child[0];
+			Node* params = root->child[1];
+			while (params) {
+				if (needToRecursive(fout, params, "ecx")) {
+					recursive_gen_code(fout, params);
+					fout << "\tMOV ecx, t" << params->tempNum<< endl;
+				}
+				fout << "\tpush ecx" << endl;
+				params = params->sibling;
+			}
+			fout << "\tcall " << fun->attr.name << endl;
+			fout << "\tMOV _" << fun->attr.name << ", ecx" << endl;
+
+			params = root->child[1];
+			while (params) {
+				fout << "\tpop ecx" << endl;
+				params = params->sibling;
+			}
+			
+		}
+		break;
+	case FuncK:
+		// do nothing
+		break;
 	case DeclK:
 		// do nothing
 		break;
@@ -491,6 +537,11 @@ void expr_gen_code(ofstream& fout, Node* root) {
 bool needToRecursive(ofstream& fout, Node* root, string target) {
 	if (root->nodeKind == StmtK && root->kind.stmtKind == AssignK)
 		return true;
+	if (root->nodeKind == StmtK && root->kind.stmtKind == CallK) {
+		recursive_gen_code(fout, root);
+		fout << "\tMOV " << target << ", _" << root->child[0]->attr.name << endl;
+		return false;
+	}
 	if (root->kind.expKind == IdK) {
 		fout << "\tMOV " << target << ", _" << root->attr.name << endl;
 		return false;
@@ -538,12 +589,34 @@ void writeDataCode(ofstream& fout, Node* root) {
 	{
 		if (stmt->nodeKind == StmtK && stmt->kind.stmtKind == DeclK)
 			gen_data_code(fout, stmt);
+		// 函数参数
+		if (stmt->nodeKind == StmtK && stmt->kind.stmtKind == FuncK) {
+			// 函数名前加_ 返回值变量
+			Node* result = stmt->child[0];
+			fout << "\t\t_" << result->child[1]->attr.name << " DWORD 0" << endl;
+
+			Node* params = stmt->child[1];
+			while (params) {
+				fout << "\t\t_" << params->child[1]->attr.name << " DWORD 0" << endl;
+				params = params->sibling;
+			}
+
+			Node* lists = stmt->child[2];
+			while (lists) {
+				if (lists->nodeKind == StmtK && lists->kind.stmtKind == DeclK)
+					gen_data_code(fout, lists);
+				lists = lists->sibling;
+			}
+			fout << endl;
+		}
+
 		stmt = stmt->sibling;
 	}
 	for (int i = 0; i < tempMaxNum; i++) {
 		fout << "\t\tt" << i << " DWORD 0" << endl;
 	}
 	fout << endl;
+
 }
 
 void gen_data_code(ofstream& fout, Node* declNode) {
@@ -575,4 +648,57 @@ void gen_data_code(ofstream& fout, Node* declNode) {
 	}
 
 	fout << endl;
+}
+
+void writeFunCode(ofstream& fout, Node* root) {
+	Node* stmt = root->child[0];
+	while (stmt)
+	{
+		if (stmt->nodeKind == StmtK && stmt->kind.stmtKind == FuncK)
+			gen_fun_code(fout, stmt);
+		stmt = stmt->sibling;
+	}
+	fout << endl;
+}
+
+void gen_fun_code(ofstream& fout, Node* root) {
+	fout << endl;
+	Node* result = root->child[0];
+	fout << "\t" << result->child[1]->attr.name << ":" << endl;
+
+	fout << "\tpush ebp" << endl;
+	fout << "\tMOV ebp, esp" << endl;
+	fout << "\tpush eax" << endl;
+	fout << "\tpush ebx" << endl;
+
+	Node* params = root->child[1];
+	int len = 0;
+	while (params) {
+		len++;
+		params = params->sibling;
+	}
+	int i = 0;
+	params = root->child[1];
+	while (params) {
+		int offset = 8 + (len - i - 1)*4;
+		char str[256];
+		sprintf(str, "\tMOV ebx, DWORD ptr[ebp+%d]\n\tMOV _%s, ebx", 
+			offset, params->child[1]->attr.name);
+		fout << str << endl;
+		params = params->sibling;
+		i++;
+	}
+	fout << endl;
+
+	Node* stmts = root->child[2];
+	while (stmts)
+	{
+		recursive_gen_code(fout, stmts);
+		stmts = stmts->sibling;
+	}
+	
+	fout << "\tpop ebx" << endl;
+	fout << "\tpop eax" << endl;
+	fout << "\tpop ebp" << endl;
+	fout << "\tret" << endl;
 }

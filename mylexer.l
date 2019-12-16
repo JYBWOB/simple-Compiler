@@ -23,7 +23,8 @@ enum NodeKind
 
 enum StmtKind
 {
-	IfK, WhileK, AssignK, ForK, CompK, InputK, OutputK, DeclK, EmptyK
+	IfK, WhileK, AssignK, ForK, CompK, InputK, OutputK, DeclK, EmptyK,
+	FuncK, ReturnK, CallK
 };
 
 enum ExpKind
